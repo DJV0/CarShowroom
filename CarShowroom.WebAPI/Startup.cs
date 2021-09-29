@@ -1,7 +1,9 @@
+using Carshowroom.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +34,9 @@ namespace CarShowroom.WebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CarShowroom.WebAPI", Version = "v1" });
             });
+
+            services.AddDbContext<CarShowroomDbContext>(options => 
+                                                    options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

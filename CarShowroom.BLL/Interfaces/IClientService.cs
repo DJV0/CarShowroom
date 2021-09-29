@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CarShowroom.BLL.Interfaces
 {
-    interface IClientService : IService<Client>
+    public interface IClientService : IService<Client>
     {
     }
 }

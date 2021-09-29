@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarShowroom.BLL.Interfaces
 {
-    interface IService<T>
+    public interface IService<T>
     {
         void Add(T entity);
         T Get(int id);

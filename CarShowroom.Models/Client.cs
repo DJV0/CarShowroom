@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace CarShowroom.Models
 {
@@ -8,5 +8,7 @@ namespace CarShowroom.Models
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
+
+        public ICollection<Car> Cars { get; set; }
     }
 }

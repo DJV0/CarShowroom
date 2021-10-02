@@ -13,5 +13,7 @@ namespace CarShowroom.Models
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Position { get; set; }
+
+        public IList<OrderEmployee> OrderEmployees { get; set; }
     }
 }

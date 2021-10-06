@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CarShowroom.BLL.Interfaces
 {
-    public interface IService<T>
+    public interface IService<T> where T : class
     {
-        void Add(T entity);
+        T Add(T entity);
         T Get(int id);
-        ICollection<T> GetAll();
+        IEnumerable<T> GetAll();
         void Update(T entity);
         void Delete(int id);
     }

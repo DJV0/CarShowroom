@@ -102,6 +102,39 @@ namespace Carshowroom.DAL
                 new Client { Id = 4, Name = "Sergei", LastName = "Polunin", Phone = "0638765432" },
                 new Client { Id = 5, Name = "Stas", LastName = "Green", Phone = "0979876543" }
                 );
+            modelBuilder.Entity<Employee>().HasData(
+                new Employee { Id = 1, Name = "Андрей", LastName = "Смит", Phone = "0987654343", Position = "слесарь" },
+                new Employee { Id = 2, Name = "Борис", LastName = "Звонкий", Phone = "0678954433", Position = "электрик" },
+                new Employee { Id = 3, Name = "Иван", LastName = "Иванов", Phone = "0989994421", Position = "шиномонтажник" }
+                );
+            modelBuilder.Entity<Part>().HasData(
+                new Part { Id = 1, Name = "Воздушный фильтр", SerialNumber = "WA09752" },
+                new Part { Id = 2, Name = "Тормозной диск", SerialNumber = "DF6143S" },
+                new Part { Id = 3, Name = "Радиатор охлаждения двигателя", SerialNumber = "NRF058413" },
+                new Part { Id = 4, Name = "Катушка зажигания", SerialNumber = "Facet09.6375" }
+                );
+            modelBuilder.Entity<Car>().HasData(
+                new Car { Id = 1, Make = "bmw", Model = "320", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 1 },
+                new Car { Id = 2, Make = "nissan", Model = "almera", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 3, OrderId = 2 },
+                new Car { Id = 3, Make = "toyota", Model = "land cruiser 200", Year = new DateTime(2012, 01, 01), BodyStyle = "кросовер", Color = "черный металлик" },
+                new Car { Id = 4, Make = "kia", Model = "ceed 16v", Year = new DateTime(2010, 01, 01), BodyStyle = "универсал", Color = "серый металлик", ClientId = 5, OrderId = 1 }
+                );
+            modelBuilder.Entity<Order>().HasData(
+                new Order { Id = 1, BeginningOfWork = new DateTime(2021, 08, 29), EndingOfWork = new DateTime(2021, 09, 10),  },
+                new Order { Id = 2, BeginningOfWork = new DateTime(2021, 09, 30), EndingOfWork = new DateTime(2021, 10, 05) }
+                );
+            modelBuilder.Entity<OrderEmployee>().HasData(
+                new OrderEmployee { OrderId = 1, EmployeeId = 1 },
+                new OrderEmployee { OrderId = 1, EmployeeId = 2 },
+                new OrderEmployee { OrderId = 2, EmployeeId = 1 },
+                new OrderEmployee { OrderId = 2, EmployeeId = 2 },
+                new OrderEmployee { OrderId = 2, EmployeeId = 3 }
+                );
+            modelBuilder.Entity<OrderPart>().HasData(
+                new OrderPart { OrderId = 1, PartId = 1 },
+                new OrderPart { OrderId = 1, PartId = 3 },
+                new OrderPart { OrderId = 2, PartId = 2 }
+                );
 
             base.OnModelCreating(modelBuilder);
         }

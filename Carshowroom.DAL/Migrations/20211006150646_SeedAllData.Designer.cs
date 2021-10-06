@@ -4,14 +4,16 @@ using Carshowroom.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carshowroom.DAL.Migrations
 {
     [DbContext(typeof(CarShowroomDbContext))]
-    partial class CarShowroomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211006150646_SeedAllData")]
+    partial class SeedAllData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

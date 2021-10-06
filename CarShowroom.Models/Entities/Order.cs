@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CarShowroom.Models
+namespace CarShowroom.Models.Entities
 {
     public class Order
     {

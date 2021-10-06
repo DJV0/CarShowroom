@@ -1,4 +1,7 @@
 using Carshowroom.DAL;
+using CarShowroom.BLL.Interfaces;
+using CarShowroom.BLL.Services;
+using CarShowroom.WebAPI.DTOs.Profiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +40,8 @@ namespace CarShowroom.WebAPI
 
             services.AddDbContext<CarShowroomDbContext>(options => 
                                                     options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
+            services.AddAutoMapper(typeof(ClientProfile));
+            services.AddScoped<IClientService, ClientService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

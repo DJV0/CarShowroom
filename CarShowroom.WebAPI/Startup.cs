@@ -1,7 +1,7 @@
 using Carshowroom.DAL;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.BLL.Services;
-using CarShowroom.WebAPI.DTOs.Profiles;
+using CarShowroom.WebAPI.Infrastructure.Profiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

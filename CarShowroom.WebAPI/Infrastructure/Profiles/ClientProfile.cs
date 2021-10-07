@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using CarShowroom.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CarShowroom.WebAPI.DTOs;
 
-namespace CarShowroom.WebAPI.DTOs.Profiles
+namespace CarShowroom.WebAPI.Infrastructure.Profiles
 {
     public class ClientProfile : Profile
     {

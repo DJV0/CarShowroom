@@ -28,20 +28,20 @@ namespace CarShowroom.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Client>> Get()
         {
-            return Ok(_clientService.GetAll());
+            return Ok(_mapper.Map<IEnumerable<ClientDTO>>(_clientService.GetAll()));
         }
 
         [HttpGet("{id}")]
         public ActionResult<Client> Get(int id)
         {
-            return Ok(_clientService.Get(id));
+            return Ok(_mapper.Map<ClientDTO>(_clientService.Get(id)));
         }
 
         [HttpPost]
         public ActionResult Post([FromBody] ClientDTO clientDTO)
         {
-            var author = _clientService.Add(_mapper.Map<Client>(clientDTO));
-            return CreatedAtAction(nameof(Get), new { id = author.Id }, author);
+            var client = _clientService.Add(_mapper.Map<Client>(clientDTO));
+            return CreatedAtAction(nameof(Get), new { id = client.Id }, _mapper.Map<ClientDTO>(client));
         }
 
         [HttpPut("{id}")]

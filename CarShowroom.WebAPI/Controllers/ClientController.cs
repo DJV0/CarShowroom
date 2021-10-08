@@ -26,13 +26,13 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Client>> Get()
+        public ActionResult<IEnumerable<ClientDTO>> Get()
         {
             return Ok(_mapper.Map<IEnumerable<ClientDTO>>(_clientService.GetAll()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Client> Get(int id)
+        public ActionResult<ClientDTO> Get(int id)
         {
             return Ok(_mapper.Map<ClientDTO>(_clientService.Get(id)));
         }

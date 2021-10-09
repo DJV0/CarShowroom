@@ -31,9 +31,9 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<CarDTO> Get(int id)
+        public ActionResult<CarDetailsDTO> Get(int id)
         {
-            return Ok(_mapper.Map<CarDTO>(_carService.Get(id)));
+            return Ok(_mapper.Map<CarDetailsDTO>(_carService.Get(id)));
         }
 
         [HttpPost]
@@ -41,6 +41,15 @@ namespace CarShowroom.WebAPI.Controllers
         {
             var car = _carService.Add(_mapper.Map<Car>(carDTO));
             return CreatedAtAction(nameof(Get), new { id = car.Id }, _mapper.Map<CarDTO>(car));
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, [FromBody] CarDTO carDTO)
+        {
+            if (id != carDTO.Id) ModelState.AddModelError("id", "Entered id doen't match with entity id");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            _carService.Update(_mapper.Map<Car>(carDTO));
+            return Ok();
         }
 
         [HttpDelete("{id}")]

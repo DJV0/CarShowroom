@@ -32,9 +32,9 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ClientDTO> Get(int id)
+        public ActionResult<ClientDetailsDTO> Get(int id)
         {
-            return Ok(_mapper.Map<ClientDTO>(_clientService.Get(id)));
+            return Ok(_mapper.Map<ClientDetailsDTO>(_clientService.Get(id)));
         }
 
         [HttpPost]
@@ -48,6 +48,7 @@ namespace CarShowroom.WebAPI.Controllers
         public ActionResult Put(int id, [FromBody] ClientDTO client)
         {
             if (id != client.Id) ModelState.AddModelError("id", "Input id doen't match");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             _clientService.Update(_mapper.Map<Client>(client));
             return Ok();
         }

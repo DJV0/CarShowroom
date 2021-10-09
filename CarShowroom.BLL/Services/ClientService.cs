@@ -12,5 +12,12 @@ namespace CarShowroom.BLL.Services
     public class ClientService : Service<Client>, IClientService
     {
         public ClientService(CarShowroomDbContext context) : base(context) { }
+
+        public override Client Get(int id)
+        {
+            var client =  base.Get(id);
+            context.Entry(client).Collection(c => c.Cars).Load();
+            return client;
+        }
     }
 }

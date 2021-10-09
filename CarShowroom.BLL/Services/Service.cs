@@ -31,12 +31,12 @@ namespace CarShowroom.BLL.Services
             context.SaveChanges();
         }
 
-        public T Get(int id)
+        public virtual T Get(int id)
         {
             return context.Set<T>().Find(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return context.Set<T>().ToList();
         }

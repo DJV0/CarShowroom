@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarShowroom.BLL.Interfaces;
+using CarShowroom.Models.Entities;
 using CarShowroom.WebAPI.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,29 @@ namespace CarShowroom.WebAPI.Controllers
         public ActionResult<EmployeeDetailsDTO> Get(int id)
         {
             return Ok(_mapper.Map<EmployeeDetailsDTO>(_employeeService.Get(id)));
+        }
+
+        [HttpPost]
+        public ActionResult<EmployeeDTO> Post([FromBody] EmployeeDTO employeeDTO)
+        {
+            var employee = _employeeService.Add(_mapper.Map<Employee>(employeeDTO));
+            return CreatedAtAction(nameof(Get), new { id = employee.Id }, _mapper.Map<EmployeeDTO>(employee));
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, [FromBody] EmployeeDTO employeeDTO)
+        {
+            if (id != employeeDTO.Id) ModelState.AddModelError("id", "Entered id doen't match with entity id");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            _employeeService.Update(_mapper.Map<Employee>(employeeDTO));
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            _employeeService.Delete(id);
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Carshowroom.DAL;
+using CarShowroom.BLL.Exceptions;
 using CarShowroom.BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,7 +34,9 @@ namespace CarShowroom.BLL.Services
 
         public virtual T Get(int id)
         {
-            return context.Set<T>().Find(id);
+            var entity = context.Set<T>().Find(id);
+            if (entity == null) throw new EntityNotFoundException("Entity with entered id doesn't found");
+            return entity;
         }
 
         public virtual IEnumerable<T> GetAll()

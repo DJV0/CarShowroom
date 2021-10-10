@@ -9,7 +9,7 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
         public CarProfile()
         {
             CreateMap<Car, CarDTO>();
-            CreateMap<CarDTO, Car>().ForMember(dest=>dest.OrderId, opt=>opt.Ignore());
+            CreateMap<CarDTO, Car>();
             CreateMap<Car, CarDetailsDTO>();
         }
     }

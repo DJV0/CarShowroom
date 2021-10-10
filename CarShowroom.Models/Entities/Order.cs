@@ -8,6 +8,8 @@ namespace CarShowroom.Models.Entities
         public int Id { get; set; }
         public DateTime BeginningOfWork { get; set; }
         public DateTime EndingOfWork { get; set; }
+
+        public int? CarId { get; set; }
         public Car Car { get; set; }
 
         public IList<OrderEmployee> OrderEmployees { get; set; }

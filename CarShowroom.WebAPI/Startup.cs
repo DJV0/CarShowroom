@@ -40,9 +40,12 @@ namespace CarShowroom.WebAPI
 
             services.AddDbContext<CarShowroomDbContext>(options => 
                                                     options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
-            services.AddAutoMapper(typeof(ClientProfile), typeof(CarProfile));
+            services.AddAutoMapper(typeof(ClientProfile), typeof(CarProfile), typeof(EmployeeProfile),
+                typeof(PartProfile), typeof(OrderProfile));
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<ICarService, CarService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IPartService, PartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -12,6 +12,5 @@ namespace CarShowroom.WebAPI.DTOs
         public string Color { get; set; }
 
         public int? ClientId { get; set; }
-        public int? OrderId { get; set; }
     }
 }

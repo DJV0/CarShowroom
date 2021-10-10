@@ -15,7 +15,6 @@ namespace CarShowroom.Models.Entities
         public string BodyStyle { get; set; }
         public string Color { get; set; }
 
-        public int? OrderId { get; set; }
         public Order Order { get; set; }
 
         public int? ClientId { get; set; }

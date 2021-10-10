@@ -68,7 +68,7 @@ namespace Carshowroom.DAL
             modelBuilder.Entity<Order>()
                 .HasOne(order => order.Car)
                 .WithOne(car => car.Order)
-                .HasForeignKey<Car>(car => car.OrderId)
+                .HasForeignKey<Order>(order => order.CarId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<OrderEmployee>()
@@ -115,13 +115,13 @@ namespace Carshowroom.DAL
                 );
             modelBuilder.Entity<Car>().HasData(
                 new Car { Id = 1, Make = "bmw", Model = "320", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 1 },
-                new Car { Id = 2, Make = "nissan", Model = "almera", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 3, OrderId = 2 },
+                new Car { Id = 2, Make = "nissan", Model = "almera", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 3 },
                 new Car { Id = 3, Make = "toyota", Model = "land cruiser 200", Year = new DateTime(2012, 01, 01), BodyStyle = "кросовер", Color = "черный металлик" },
-                new Car { Id = 4, Make = "kia", Model = "ceed 16v", Year = new DateTime(2010, 01, 01), BodyStyle = "универсал", Color = "серый металлик", ClientId = 5, OrderId = 1 }
+                new Car { Id = 4, Make = "kia", Model = "ceed 16v", Year = new DateTime(2010, 01, 01), BodyStyle = "универсал", Color = "серый металлик", ClientId = 5 }
                 );
             modelBuilder.Entity<Order>().HasData(
-                new Order { Id = 1, BeginningOfWork = new DateTime(2021, 08, 29), EndingOfWork = new DateTime(2021, 09, 10),  },
-                new Order { Id = 2, BeginningOfWork = new DateTime(2021, 09, 30), EndingOfWork = new DateTime(2021, 10, 05) }
+                new Order { Id = 1, BeginningOfWork = new DateTime(2021, 08, 29), EndingOfWork = new DateTime(2021, 09, 10), CarId = 2 },
+                new Order { Id = 2, BeginningOfWork = new DateTime(2021, 09, 30), EndingOfWork = new DateTime(2021, 10, 05), CarId = 4 }
                 );
             modelBuilder.Entity<OrderEmployee>().HasData(
                 new OrderEmployee { OrderId = 1, EmployeeId = 1 },

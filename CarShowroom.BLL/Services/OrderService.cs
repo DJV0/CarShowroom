@@ -1,6 +1,7 @@
 ﻿using Carshowroom.DAL;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace CarShowroom.BLL.Services
         {
             var order = base.Get(id);
             context.Entry(order).Reference(o => o.Car).Load();
+            context.Entry(order).Collection(o => o.OrderEmployees).Query().Include(oe => oe.Employee).Load();
+            context.Entry(order).Collection(o => o.OrderParts).Query().Include(op => op.Part).Load();
             return order;
         }
     }

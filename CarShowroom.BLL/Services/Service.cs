@@ -18,7 +18,7 @@ namespace CarShowroom.BLL.Services
         {
             this.context = context;
         }
-        public T Add(T entity)
+        public virtual T Add(T entity)
         {
             context.Set<T>().Add(entity);
             context.SaveChanges();
@@ -35,7 +35,7 @@ namespace CarShowroom.BLL.Services
         public virtual T Get(int id)
         {
             var entity = context.Set<T>().Find(id);
-            if (entity == null) throw new EntityNotFoundException("Entity with entered id doesn't found");
+            if (entity == null) throw new NotFoundEntityException("Entity with entered id not found");
             return entity;
         }
 
@@ -44,7 +44,7 @@ namespace CarShowroom.BLL.Services
             return context.Set<T>().ToList();
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             context.Set<T>().Update(entity);
             context.SaveChanges();

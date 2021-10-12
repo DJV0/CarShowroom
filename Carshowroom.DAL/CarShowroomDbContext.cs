@@ -75,24 +75,24 @@ namespace Carshowroom.DAL
                 .HasOne(oe => oe.Order)
                 .WithMany(order => order.OrderEmployees)
                 .HasForeignKey(oe => oe.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<OrderEmployee>()
                 .HasOne(oe => oe.Employee)
                 .WithMany(e => e.OrderEmployees)
                 .HasForeignKey(oe => oe.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<OrderEmployee>().HasKey(oe => new { oe.OrderId, oe.EmployeeId });
 
             modelBuilder.Entity<OrderPart>()
                 .HasOne(op => op.Order)
                 .WithMany(order => order.OrderParts)
                 .HasForeignKey(op => op.OrderId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<OrderPart>()
                 .HasOne(op => op.Part)
                 .WithMany(part => part.OrderParts)
                 .HasForeignKey(op => op.PartId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<OrderPart>().HasKey(op => new { op.OrderId, op.PartId });
 
             modelBuilder.Entity<Client>().HasData(

@@ -12,6 +12,6 @@ namespace CarShowroom.Models.Entities
         public string Name { get; set; }
         public string SerialNumber { get; set; }
 
-        public IList<OrderPart> OrderParts { get; set; }
+        public ICollection<OrderPart> OrderParts { get; set; }
     }
 }

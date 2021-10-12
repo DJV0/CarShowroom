@@ -12,8 +12,8 @@ namespace CarShowroom.Models.Entities
         public int? CarId { get; set; }
         public Car Car { get; set; }
 
-        public IList<OrderEmployee> OrderEmployees { get; set; }
-        public IList<OrderPart> OrderParts { get; set; }
+        public ICollection<OrderEmployee> OrderEmployees { get; set; }
+        public ICollection<OrderPart> OrderParts { get; set; }
 
     }
 }

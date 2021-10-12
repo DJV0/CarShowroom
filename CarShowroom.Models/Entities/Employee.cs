@@ -14,6 +14,6 @@ namespace CarShowroom.Models.Entities
         public string Phone { get; set; }
         public string Position { get; set; }
 
-        public IList<OrderEmployee> OrderEmployees { get; set; }
+        public ICollection<OrderEmployee> OrderEmployees { get; set; }
     }
 }

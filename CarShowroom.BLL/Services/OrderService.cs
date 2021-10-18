@@ -1,4 +1,5 @@
-﻿using Carshowroom.DAL;
+﻿using AutoMapper;
+using Carshowroom.DAL;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,23 +13,28 @@ namespace CarShowroom.BLL.Services
 {
     public class OrderService : Service<Order>, IOrderService
     {
-        public OrderService(CarShowroomDbContext context) : base(context) { }
+        private IMapper _mapper;
+        public OrderService(CarShowroomDbContext context, IMapper mapper) : base(context) => _mapper = mapper;
         public override IEnumerable<Order> GetAll()
         {
-            var orderList = base.GetAll();
-            foreach (var order in orderList)
-            {
-                context.Entry(order).Reference(o => o.Car).Load();
-            }
-            return orderList;
+            return context.Orders.Include(o=>o.Car);
         }
         public override Order Get(int id)
         {
-            var order = base.Get(id);
-            context.Entry(order).Reference(o => o.Car).Load();
-            context.Entry(order).Collection(o => o.OrderEmployees).Query().Include(oe => oe.Employee).Load();
-            context.Entry(order).Collection(o => o.OrderParts).Query().Include(op => op.Part).Load();
+            var order = context.Orders
+                .Include(o => o.Car)
+                .Include(o => o.OrderEmployees)
+                .ThenInclude(oe=>oe.Employee)
+                .Include(o => o.OrderParts)
+                .ThenInclude(oe => oe.Part)
+                .FirstOrDefault(o => o.Id == id);
             return order;
+        }
+        public override void Update(Order entity)
+        {
+            var order = Get(entity.Id);
+            _mapper.Map(entity, order);
+            base.Update(order);
         }
     }
 }

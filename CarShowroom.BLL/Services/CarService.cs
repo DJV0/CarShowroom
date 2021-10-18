@@ -1,6 +1,7 @@
 ﻿using Carshowroom.DAL;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,10 @@ namespace CarShowroom.BLL.Services
         public CarService(CarShowroomDbContext context) : base(context) { }
         public override Car Get(int id)
         {
-            var car =  base.Get(id);
-            context.Entry(car).Reference(c => c.Client).Load();
-            context.Entry(car).Reference(c => c.Order).Load();
-            return car;
+            return context.Cars
+                .Include(c => c.Client)
+                .Include(c => c.Order)
+                .FirstOrDefault(c => c.Id == id);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Carshowroom.DAL;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace CarShowroom.BLL.Services
 
         public override Client Get(int id)
         {
-            var client =  base.Get(id);
-            context.Entry(client).Collection(c => c.Cars).Load();
-            return client;
+            return context.Clients
+                .Include(c => c.Cars)
+                .FirstOrDefault(c => c.Id == id);
         }
     }
 }

@@ -15,9 +15,10 @@ namespace CarShowroom.BLL.Services
         public PartService(CarShowroomDbContext context) : base(context) { }
         public override Part Get(int id)
         {
-            var part = base.Get(id);
-            context.Entry(part).Collection(p => p.OrderParts).Query().Include(op => op.Order).Load();
-            return part;
+            return context.Parts
+                .Include(p=>p.OrderParts)
+                .ThenInclude(op=>op.Order)
+                .FirstOrDefault(p=>p.Id==id);
         }
     }
 }

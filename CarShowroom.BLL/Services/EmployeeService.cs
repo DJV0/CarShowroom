@@ -15,10 +15,11 @@ namespace CarShowroom.BLL.Services
         public EmployeeService(CarShowroomDbContext context) : base(context) { }
         public override Employee Get(int id)
         {
-            var employee = base.Get(id);
-            context.Entry(employee).Collection(e => e.OrderEmployees).Query()
-                .Include(oe => oe.Order).ThenInclude(o=>o.Car).Load();
-            return employee;
+            return context.Employees
+                .Include(e => e.OrderEmployees)
+                .ThenInclude(oe => oe.Order)
+                .ThenInclude(o => o.Car)
+                .FirstOrDefault(e => e.Id == id);
         }
     }
 }

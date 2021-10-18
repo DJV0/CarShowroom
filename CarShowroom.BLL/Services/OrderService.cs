@@ -13,7 +13,7 @@ namespace CarShowroom.BLL.Services
 {
     public class OrderService : Service<Order>, IOrderService
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         public OrderService(CarShowroomDbContext context, IMapper mapper) : base(context) => _mapper = mapper;
         public override IEnumerable<Order> GetAll()
         {

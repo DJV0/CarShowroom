@@ -1,4 +1,5 @@
 ﻿using Carshowroom.DAL;
+using CarShowroom.BLL.Exceptions;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,12 @@ namespace CarShowroom.BLL.Services
         public CarService(CarShowroomDbContext context) : base(context) { }
         public override Car Get(int id)
         {
-            return context.Cars
+            var car = context.Cars
                 .Include(c => c.Client)
                 .Include(c => c.Order)
                 .FirstOrDefault(c => c.Id == id);
+            if (car == null) throw new ItemNotFoundException($"{typeof(Car).Name} item with id {id} not found.");
+            return car;
         }
     }
 }

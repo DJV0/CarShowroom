@@ -28,6 +28,7 @@ namespace CarShowroom.BLL.Services
         public void Delete(int id)
         {
             T entity = Get(id);
+            if(entity == null) throw new ItemNotFoundException($"{typeof(T).Name} with id {id} not found");
             context.Set<T>().Remove(entity);
             context.SaveChanges();
         }
@@ -35,7 +36,7 @@ namespace CarShowroom.BLL.Services
         public virtual T Get(int id)
         {
             var entity = context.Set<T>().Find(id);
-            if (entity == null) throw new NotFoundEntityException("Entity with entered id not found");
+            if (entity == null) throw new ItemNotFoundException($"{typeof(T).Name} with id {id} not found");
             return entity;
         }
 

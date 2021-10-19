@@ -1,4 +1,5 @@
 ﻿using Carshowroom.DAL;
+using CarShowroom.BLL.Exceptions;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,11 @@ namespace CarShowroom.BLL.Services
 
         public override Client Get(int id)
         {
-            return context.Clients
+            var client = context.Clients
                 .Include(c => c.Cars)
                 .FirstOrDefault(c => c.Id == id);
+            if (client == null) throw new ItemNotFoundException($"{typeof(Client).Name} item with id {id} not found.");
+            return client;
         }
     }
 }

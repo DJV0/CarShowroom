@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Carshowroom.DAL;
+using CarShowroom.BLL.Exceptions;
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace CarShowroom.BLL.Services
                 .Include(o => o.OrderParts)
                 .ThenInclude(oe => oe.Part)
                 .FirstOrDefault(o => o.Id == id);
+            if (order == null) throw new ItemNotFoundException($"{typeof(Order).Name} item with id {id} not found.");
             return order;
         }
         public override void Update(Order entity)

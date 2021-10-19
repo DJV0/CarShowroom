@@ -3,6 +3,7 @@ using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
 using CarShowroom.WebAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +18,13 @@ namespace CarShowroom.WebAPI.Controllers
     {
         private readonly IClientService _clientService;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public ClientController(IClientService service, IMapper mapper)
+        public ClientController(IClientService service, IMapper mapper, ILogger<ClientController> logger)
         {
             _clientService = service;
             _mapper = mapper;
-
+            _logger = logger;
         }
 
         [HttpGet]
@@ -34,6 +36,8 @@ namespace CarShowroom.WebAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<ClientDetailsDTO> Get(int id)
         {
+            _logger.LogInformation($"Getting item with id {id}.");
+
             return Ok(_mapper.Map<ClientDetailsDTO>(_clientService.Get(id)));
         }
 

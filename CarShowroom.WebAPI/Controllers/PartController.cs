@@ -4,6 +4,7 @@ using CarShowroom.Models.Entities;
 using CarShowroom.WebAPI.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,12 @@ namespace CarShowroom.WebAPI.Controllers
     {
         private readonly IPartService _partService;
         private readonly IMapper _mapper;
-        public PartController(IPartService partService, IMapper mapper)
+        private readonly ILogger<PartController> _logger;
+        public PartController(IPartService partService, IMapper mapper, ILogger<PartController> logger)
         {
             _partService = partService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -33,6 +36,8 @@ namespace CarShowroom.WebAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<PartDetailsDTO> Get(int id)
         {
+            _logger.LogInformation($"Getting item with id {id}.");
+
             return Ok(_mapper.Map<PartDetailsDTO>(_partService.Get(id)));
         }
 

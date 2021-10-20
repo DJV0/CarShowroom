@@ -51,6 +51,7 @@ namespace CarShowroom.WebAPI
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IPartService, PartService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

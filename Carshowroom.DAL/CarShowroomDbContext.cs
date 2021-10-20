@@ -23,6 +23,7 @@ namespace Carshowroom.DAL
             modelBuilder.Entity<Client>().Property(client => client.Name).IsRequired();
             modelBuilder.Entity<Client>().Property(client => client.LastName).HasMaxLength(30);
             modelBuilder.Entity<Client>().Property(client => client.LastName).IsRequired();
+            modelBuilder.Entity<Client>().Property(client => client.Gender).IsRequired();
             modelBuilder.Entity<Client>().Property(client => client.Phone).HasMaxLength(10);
             modelBuilder.Entity<Client>().Property(client => client.Phone).IsRequired();
             modelBuilder.Entity<Client>(entity => entity.HasIndex(client => client.Phone).IsUnique());
@@ -49,6 +50,7 @@ namespace Carshowroom.DAL
             modelBuilder.Entity<Car>().Property(car => car.BodyStyle).IsRequired();
             modelBuilder.Entity<Car>().Property(car => car.Color).HasMaxLength(20);
             modelBuilder.Entity<Car>().Property(car => car.Color).IsRequired();
+            modelBuilder.Entity<Car>().Property(car => car.Mileage).IsRequired();
             modelBuilder.Entity<Car>()
                 .HasOne(car => car.Client)
                 .WithMany(client => client.Cars)
@@ -96,11 +98,11 @@ namespace Carshowroom.DAL
             modelBuilder.Entity<OrderPart>().HasKey(op => new { op.OrderId, op.PartId });
 
             modelBuilder.Entity<Client>().HasData(
-                new Client { Id = 1, Name = "Oleh", LastName = "Terentiev", Phone = "0981234141" },
-                new Client { Id = 2, Name = "Roman", LastName = "Simonenko", Phone = "0961234567" },
-                new Client { Id = 3, Name = "Petr", LastName = "Klimov", Phone = "0671234567" },
-                new Client { Id = 4, Name = "Sergei", LastName = "Polunin", Phone = "0638765432" },
-                new Client { Id = 5, Name = "Stas", LastName = "Green", Phone = "0979876543" }
+                new Client { Id = 1, Name = "Олег", LastName = "Терентьев", Gender=Gender.Male, Phone = "0981234141" },
+                new Client { Id = 2, Name = "Роман", LastName = "Симоненко", Gender = Gender.Male, Phone = "0961234567" },
+                new Client { Id = 3, Name = "Петр", LastName = "Климов", Gender = Gender.Male, Phone = "0671234567" },
+                new Client { Id = 4, Name = "Анна", LastName = "Полунина", Gender = Gender.Female, Phone = "0638765432" },
+                new Client { Id = 5, Name = "Виктория", LastName = "Грин", Gender = Gender.Female, Phone = "0979876543" }
                 );
             modelBuilder.Entity<Employee>().HasData(
                 new Employee { Id = 1, Name = "Андрей", LastName = "Смит", Phone = "0987654343", Position = "слесарь" },
@@ -114,10 +116,14 @@ namespace Carshowroom.DAL
                 new Part { Id = 4, Name = "Катушка зажигания", SerialNumber = "Facet09.6375" }
                 );
             modelBuilder.Entity<Car>().HasData(
-                new Car { Id = 1, Make = "bmw", Model = "320", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 1 },
-                new Car { Id = 2, Make = "nissan", Model = "almera", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", Color = "синий", ClientId = 3 },
-                new Car { Id = 3, Make = "toyota", Model = "land cruiser 200", Year = new DateTime(2012, 01, 01), BodyStyle = "кросовер", Color = "черный металлик" },
-                new Car { Id = 4, Make = "kia", Model = "ceed 16v", Year = new DateTime(2010, 01, 01), BodyStyle = "универсал", Color = "серый металлик", ClientId = 5 }
+                new Car { Id = 1, Make = "bmw", Model = "320", Year = new DateTime(2001, 01, 01), BodyStyle = "седан", 
+                    Color = "синий", Mileage = 150000, ClientId = 1 },
+                new Car { Id = 2, Make = "nissan", Model = "almera", Year = new DateTime(2001, 01, 01), BodyStyle = "седан",
+                    Color = "синий", Mileage = 200000, ClientId = 3 },
+                new Car { Id = 3, Make = "toyota", Model = "land cruiser 200", Year = new DateTime(2012, 01, 01), 
+                    BodyStyle = "кросовер", Color = "черный металлик", Mileage = 25000, },
+                new Car { Id = 4, Make = "kia", Model = "ceed 16v", Year = new DateTime(2010, 01, 01), 
+                    BodyStyle = "универсал", Color = "серый металлик", Mileage = 80000, ClientId = 5 }
                 );
             modelBuilder.Entity<Order>().HasData(
                 new Order { Id = 1, BeginningOfWork = new DateTime(2021, 08, 29), EndingOfWork = new DateTime(2021, 09, 10), CarId = 2 },

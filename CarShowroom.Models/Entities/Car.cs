@@ -14,6 +14,7 @@ namespace CarShowroom.Models.Entities
         public DateTime Year { get; set; }
         public string BodyStyle { get; set; }
         public string Color { get; set; }
+        public int Mileage { get; set; }
 
         public Order Order { get; set; }
 

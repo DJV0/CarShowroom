@@ -28,39 +28,39 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ClientDTO>> Get()
+        public async Task<ActionResult<IEnumerable<ClientDTO>>> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<ClientDTO>>(_clientService.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<ClientDTO>>(await _clientService.GetAllAsync()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ClientDetailsDTO> Get(int id)
+        public async Task<ActionResult<ClientDetailsDTO>> Get(int id)
         {
             _logger.LogInformation($"Getting item with id {id}.");
 
-            return Ok(_mapper.Map<ClientDetailsDTO>(_clientService.Get(id)));
+            return Ok(_mapper.Map<ClientDetailsDTO>(await _clientService.GetAsync(id)));
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] ClientDTO clientDTO)
+        public async Task<ActionResult> Post([FromBody] ClientDTO clientDTO)
         {
-            var client = _clientService.Add(_mapper.Map<Client>(clientDTO));
+            var client = await _clientService.AddAsync(_mapper.Map<Client>(clientDTO));
             return CreatedAtAction(nameof(Get), new { id = client.Id }, _mapper.Map<ClientDTO>(client));
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] ClientDTO client)
+        public async Task<ActionResult> Put(int id, [FromBody] ClientDTO client)
         {
             if (id != client.Id) ModelState.AddModelError("id", "Input id doen't match");
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            _clientService.Update(_mapper.Map<Client>(client));
+            await _clientService.UpdateAsync(_mapper.Map<Client>(client));
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _clientService.Delete(id);
+            await _clientService.DeleteAsync(id);
             return NoContent();
         }
     }

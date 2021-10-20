@@ -28,39 +28,39 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CarDTO>> Get()
+        public async Task<ActionResult<IEnumerable<CarDTO>>> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<CarDTO>>(_carService.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<CarDTO>>(await _carService.GetAllAsync()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<CarDetailsDTO> Get(int id)
+        public async Task<ActionResult<CarDetailsDTO>> Get(int id)
         {
             _logger.LogInformation($"Getting item with id {id}.");
 
-            return Ok(_mapper.Map<CarDetailsDTO>(_carService.Get(id)));
+            return Ok(_mapper.Map<CarDetailsDTO>(await _carService.GetAsync(id)));
         }
 
         [HttpPost]
-        public ActionResult<CarDTO> Post([FromBody] CarDTO carDTO)
+        public async Task<ActionResult<CarDTO>> Post([FromBody] CarDTO carDTO)
         {
-            var car = _carService.Add(_mapper.Map<Car>(carDTO));
+            var car = await _carService.AddAsync(_mapper.Map<Car>(carDTO));
             return CreatedAtAction(nameof(Get), new { id = car.Id }, _mapper.Map<CarDTO>(car));
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] CarDTO carDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] CarDTO carDTO)
         {
             if (id != carDTO.Id) ModelState.AddModelError("id", "Entered id doen't match with entity id");
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            _carService.Update(_mapper.Map<Car>(carDTO));
+            await _carService.UpdateAsync(_mapper.Map<Car>(carDTO));
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _carService.Delete(id);
+            await _carService.DeleteAsync(id);
             return NoContent();
         }
     }

@@ -18,37 +18,37 @@ namespace CarShowroom.BLL.Services
         {
             this.context = context;
         }
-        public virtual T Add(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
-            context.Set<T>().Add(entity);
-            context.SaveChanges();
+            await context.Set<T>().AddAsync(entity);
+            await context.SaveChangesAsync();
             return entity;
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            T entity = Get(id);
+            T entity = await GetAsync(id);
             if(entity == null) throw new ItemNotFoundException($"{typeof(T).Name} with id {id} not found");
             context.Set<T>().Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public virtual T Get(int id)
+        public virtual async Task<T> GetAsync(int id)
         {
-            var entity = context.Set<T>().Find(id);
+            var entity = await context.Set<T>().FindAsync(id);
             if (entity == null) throw new ItemNotFoundException($"{typeof(T).Name} with id {id} not found");
             return entity;
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            return context.Set<T>().ToList();
+            return await context.Set<T>().ToListAsync();
         }
 
-        public virtual void Update(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             context.Set<T>().Update(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

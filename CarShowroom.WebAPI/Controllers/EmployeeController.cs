@@ -28,39 +28,39 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<EmployeeDTO>> Get()
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<EmployeeDTO>>(_employeeService.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<EmployeeDTO>>(await _employeeService.GetAllAsync()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<EmployeeDetailsDTO> Get(int id)
+        public async Task<ActionResult<EmployeeDetailsDTO>> Get(int id)
         {
             _logger.LogInformation($"Getting item with id {id}.");
 
-            return Ok(_mapper.Map<EmployeeDetailsDTO>(_employeeService.Get(id)));
+            return Ok(_mapper.Map<EmployeeDetailsDTO>(await _employeeService.GetAsync(id)));
         }
 
         [HttpPost]
-        public ActionResult<EmployeeDTO> Post([FromBody] EmployeeDTO employeeDTO)
+        public async Task<ActionResult<EmployeeDTO>> Post([FromBody] EmployeeDTO employeeDTO)
         {
-            var employee = _employeeService.Add(_mapper.Map<Employee>(employeeDTO));
+            var employee = await _employeeService.AddAsync(_mapper.Map<Employee>(employeeDTO));
             return CreatedAtAction(nameof(Get), new { id = employee.Id }, _mapper.Map<EmployeeDTO>(employee));
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EmployeeDTO employeeDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] EmployeeDTO employeeDTO)
         {
             if (id != employeeDTO.Id) ModelState.AddModelError("id", "Entered id doen't match with entity id");
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            _employeeService.Update(_mapper.Map<Employee>(employeeDTO));
+            await _employeeService.UpdateAsync(_mapper.Map<Employee>(employeeDTO));
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _employeeService.Delete(id);
+            await _employeeService.DeleteAsync(id);
             return NoContent();
         }
     }

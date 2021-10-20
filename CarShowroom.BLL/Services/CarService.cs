@@ -14,12 +14,12 @@ namespace CarShowroom.BLL.Services
     public class CarService : Service<Car>, ICarService
     {
         public CarService(CarShowroomDbContext context) : base(context) { }
-        public override Car Get(int id)
+        public override async Task<Car> GetAsync(int id)
         {
-            var car = context.Cars
+            var car = await context.Cars
                 .Include(c => c.Client)
                 .Include(c => c.Order)
-                .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (car == null) throw new ItemNotFoundException($"{typeof(Car).Name} item with id {id} not found.");
             return car;
         }

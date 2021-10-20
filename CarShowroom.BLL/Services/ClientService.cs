@@ -15,11 +15,11 @@ namespace CarShowroom.BLL.Services
     {
         public ClientService(CarShowroomDbContext context) : base(context) { }
 
-        public override Client Get(int id)
+        public override async Task<Client> GetAsync(int id)
         {
-            var client = context.Clients
+            var client = await context.Clients
                 .Include(c => c.Cars)
-                .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (client == null) throw new ItemNotFoundException($"{typeof(Client).Name} item with id {id} not found.");
             return client;
         }

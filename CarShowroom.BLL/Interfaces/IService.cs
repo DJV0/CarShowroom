@@ -8,10 +8,10 @@ namespace CarShowroom.BLL.Interfaces
 {
     public interface IService<T> where T : class
     {
-        T Add(T entity);
-        T Get(int id);
-        IEnumerable<T> GetAll();
-        void Update(T entity);
-        void Delete(int id);
+        Task<T> AddAsync(T entity);
+        Task<T> GetAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(int id);
     }
 }

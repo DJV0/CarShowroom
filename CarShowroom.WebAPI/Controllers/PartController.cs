@@ -28,39 +28,39 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PartDTO>> Get()
+        public async Task<ActionResult<IEnumerable<PartDTO>>> Get()
         {
-            return Ok(_mapper.Map<IEnumerable<PartDTO>>(_partService.GetAll()));
+            return Ok(_mapper.Map<IEnumerable<PartDTO>>(await _partService.GetAllAsync()));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<PartDetailsDTO> Get(int id)
+        public async Task<ActionResult<PartDetailsDTO>> Get(int id)
         {
             _logger.LogInformation($"Getting item with id {id}.");
 
-            return Ok(_mapper.Map<PartDetailsDTO>(_partService.Get(id)));
+            return Ok(_mapper.Map<PartDetailsDTO>(await _partService.GetAsync(id)));
         }
 
         [HttpPost]
-        public ActionResult<PartDTO> Post([FromBody] PartDTO partDTO)
+        public async Task<ActionResult<PartDTO>> Post([FromBody] PartDTO partDTO)
         {
-            var part = _partService.Add(_mapper.Map<Part>(partDTO));
+            var part = await _partService.AddAsync(_mapper.Map<Part>(partDTO));
             return CreatedAtAction(nameof(Get), new { id = part.Id }, _mapper.Map<PartDTO>(part));
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] PartDTO partDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] PartDTO partDTO)
         {
             if (id != partDTO.Id) ModelState.AddModelError("id", "Entered id doen't match with entity id");
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            _partService.Update(_mapper.Map<Part>(partDTO));
+            await _partService.UpdateAsync(_mapper.Map<Part>(partDTO));
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _partService.Delete(id);
+            await _partService.DeleteAsync(id);
             return NoContent();
         }
 

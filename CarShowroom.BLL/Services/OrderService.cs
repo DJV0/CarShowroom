@@ -16,27 +16,27 @@ namespace CarShowroom.BLL.Services
     {
         private readonly IMapper _mapper;
         public OrderService(CarShowroomDbContext context, IMapper mapper) : base(context) => _mapper = mapper;
-        public override IEnumerable<Order> GetAll()
+        public override async Task<IEnumerable<Order>> GetAllAsync()
         {
-            return context.Orders.Include(o=>o.Car);
+            return await context.Orders.Include(o=>o.Car).ToListAsync();
         }
-        public override Order Get(int id)
+        public override async Task<Order> GetAsync(int id)
         {
-            var order = context.Orders
+            var order = await context.Orders
                 .Include(o => o.Car)
                 .Include(o => o.OrderEmployees)
                 .ThenInclude(oe=>oe.Employee)
                 .Include(o => o.OrderParts)
                 .ThenInclude(oe => oe.Part)
-                .FirstOrDefault(o => o.Id == id);
+                .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null) throw new ItemNotFoundException($"{typeof(Order).Name} item with id {id} not found.");
             return order;
         }
-        public override void Update(Order entity)
+        public override async Task UpdateAsync(Order entity)
         {
-            var order = Get(entity.Id);
+            var order = await GetAsync(entity.Id);
             _mapper.Map(entity, order);
-            base.Update(order);
+            await base.UpdateAsync(order);
         }
     }
 }

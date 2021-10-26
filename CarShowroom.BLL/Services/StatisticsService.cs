@@ -19,9 +19,41 @@ namespace CarShowroom.BLL.Services
             _context = context;
         }
 
-        public Task<int> GetAverageMileageForPartReplacement(string partName)
+        public async Task<int> GetAverageMileageForPartReplacement(string partName, string Make, string Model)
         {
-            throw new NotImplementedException();
+            return (int)await _context.Orders
+                .Include(o=>o.Car)
+                .Include(o=>o.OrderParts)
+                .ThenInclude(op=>op.Part)
+                .Where(o=>o.OrderParts.Any(op=>op.Part.Name == partName))
+                .Where(o => o.Car.Make == Make && o.Car.Model == Model)
+                .AverageAsync(o => o.Car.Mileage);
+        }
+
+        public async Task<IEnumerable<Car>> GetCarInShowroomByMake(string make)
+        {
+           return await _context.Cars
+                .Where(c => c.Make == make && c.ClientId == default)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetEmployeeOrdersInProgress(string name, string lastName)
+        {
+            return await _context.Orders
+                .Include(o => o.Car)
+                .Include(o => o.OrderEmployees)
+                .ThenInclude(oe => oe.Employee)
+                .Where(o => o.OrderEmployees.Any(oe => oe.Employee.Name == name && oe.Employee.LastName == lastName)
+                    && o.EndingOfWork > DateTime.Now)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> GetOrdersAmountInCurrentMonth()
+        {
+            return await _context.Orders
+                .Include(o => o.Car)
+                .Where(o => o.BeginningOfWork.Year == DateTime.Now.Year && o.BeginningOfWork.Month == DateTime.Now.Month)
+                .ToListAsync();
         }
 
         public async Task<MenAndWomenPercengate> GetPercentageOfMenAndWomenInService()
@@ -45,6 +77,21 @@ namespace CarShowroom.BLL.Services
                 WomenPercentage = (double)genderList
                                     .FirstOrDefault(list => list.Gender == Gender.Female).Amount / peopleSum * 100
             };
+        }
+
+        public async Task<string> GetTheMostPopularCarInService()
+        {
+            var car = await _context.Orders
+                .Include(o => o.Car)
+                .GroupBy(o => o.Car.Make)
+                .Select(g => new
+                {
+                    Make = g.Key,
+                    Count = g.Count()
+                })
+                .OrderByDescending(a => a.Count)
+                .FirstOrDefaultAsync();
+            return car.Make;
         }
     }
 }

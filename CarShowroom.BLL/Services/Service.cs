@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CarShowroom.BLL.Services
 {
-    public class Service<T> : IService<T> where T: class
+    public abstract class Service<T> : IService<T> where T: class
     {
         protected readonly CarShowroomDbContext context;
 

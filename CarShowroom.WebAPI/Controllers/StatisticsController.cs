@@ -77,5 +77,11 @@ namespace CarShowroom.WebAPI.Controllers
             var result = await _statisticsService.GetCarInShowroomByMake(make);
             return _mapper.Map<IEnumerable<CarDTO>>(result);
         }
+
+        [HttpGet("GetCarPartThatBreakDownMostOften")]
+        public async Task<string> GetCarPartThatBreakDownMostOften(string make, string model)
+        {
+            return await _statisticsService.GetCarPartThatBreakDownMostOften(make, model);
+        }
     }
 }

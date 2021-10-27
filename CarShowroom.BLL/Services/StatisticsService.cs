@@ -37,6 +37,29 @@ namespace CarShowroom.BLL.Services
                 .ToListAsync();
         }
 
+        public async Task<string> GetCarPartThatBreakDownMostOften(string make, string model)
+        {
+            var result = await _context.Orders
+                .Include(o => o.Car)
+                .Include(o => o.OrderParts)
+                .ThenInclude(op => op.Part)
+                .Where(o => o.Car.Make == make && o.Car.Model == model)
+                .SelectMany(o => o.OrderParts, (o, op) => new
+                {
+                    Order = o,
+                    Part = op.Part.Name
+                })
+                .GroupBy(x => x.Part)
+                .Select(x => new
+                {
+                    Part = x.Key,
+                    Amount = x.Count()
+                })
+                .OrderByDescending(x => x.Amount)
+                .FirstOrDefaultAsync();
+            return result.Part;
+        }
+
         public async Task<IEnumerable<Order>> GetEmployeeOrdersInProgress(string name, string lastName)
         {
             return await _context.Orders

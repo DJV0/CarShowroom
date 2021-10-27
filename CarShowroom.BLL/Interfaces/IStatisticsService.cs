@@ -14,6 +14,6 @@ namespace CarShowroom.BLL.Interfaces
         Task<IEnumerable<Order>> GetOrdersAmountInCurrentMonth();
         Task<string> GetTheMostPopularCarInService();
         Task<IEnumerable<Car>> GetCarInShowroomByMake(string make);
-
+        Task<string> GetCarPartThatBreakDownMostOften(string make, string model);
     }
 }

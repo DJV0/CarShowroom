@@ -41,7 +41,7 @@ namespace CarShowroom.WebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CarShowroom.WebAPI", Version = "v1" });
             });
-
+            services.AddHttpClient();
             services.AddDbContext<CarShowroomDbContext>(options => 
                                                     options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
             services.AddAutoMapper(typeof(ClientProfile), typeof(CarProfile), typeof(EmployeeProfile),
@@ -52,6 +52,7 @@ namespace CarShowroom.WebAPI
             services.AddScoped<IPartService, PartService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IHttpClientServiceImplementation, HttpClientFactoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

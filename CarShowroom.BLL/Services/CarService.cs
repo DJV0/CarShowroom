@@ -13,7 +13,11 @@ namespace CarShowroom.BLL.Services
 {
     public class CarService : Service<Car>, ICarService
     {
-        public CarService(CarShowroomDbContext context) : base(context) { }
+        private readonly IHttpClientServiceImplementation _client;
+        public CarService(CarShowroomDbContext context, IHttpClientServiceImplementation client) : base(context)
+        {
+            _client = client;
+        }
         public override async Task<Car> GetAsync(int id)
         {
             var car = await context.Cars
@@ -22,6 +26,11 @@ namespace CarShowroom.BLL.Services
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (car == null) throw new ItemNotFoundException($"{typeof(Car).Name} item with id {id} not found.");
             return car;
+        }
+        public override async Task<Car> AddAsync(Car entity)
+        {
+            entity.ImageUrl = await _client.GetCarImageUrl($"{entity.Make} {entity.Model}");
+            return await base.AddAsync(entity);
         }
     }
 }

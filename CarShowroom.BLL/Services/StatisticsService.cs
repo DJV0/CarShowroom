@@ -71,12 +71,16 @@ namespace CarShowroom.BLL.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersAmountInCurrentMonth()
+        public async Task<int> GetOrdersAmountInCurrentMonth()
         {
-            return await _context.Orders
+            var orderList = await _context.Orders
                 .Include(o => o.Car)
                 .Where(o => o.BeginningOfWork.Year == DateTime.Now.Year && o.BeginningOfWork.Month == DateTime.Now.Month)
                 .ToListAsync();
+            var result = orderList.Count;
+            await AddValueToDataBase(nameof(GetOrdersAmountInCurrentMonth), result.ToString());
+            return result;
+
         }
 
         public async Task<MenAndWomenPercengate> GetPercentageOfMenAndWomenInService()
@@ -114,7 +118,22 @@ namespace CarShowroom.BLL.Services
                 })
                 .OrderByDescending(a => a.Count)
                 .FirstOrDefaultAsync();
+            await AddValueToDataBase(nameof(GetTheMostPopularCarInService), car.Make);
             return car.Make;
+        }
+
+        private async Task AddValueToDataBase(string statisticsName, string value)
+        {
+            var stat = new Statistics()
+            {
+                Name = statisticsName,
+                Value = value
+            };
+            var statEntity = await _context.Statistics.FindAsync(stat.Name);
+            if (statEntity == null) await _context.Statistics.AddAsync(stat);
+            else _context.Entry(statEntity).CurrentValues.SetValues(stat);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

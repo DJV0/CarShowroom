@@ -16,7 +16,7 @@ namespace CarShowroom.WebAPI.DTOs
         public string Color { get; set; }
         public string ImageUrl { get; set; }
 
-        public OrderDTO Order { get; set; }
+        public IEnumerable<OrderDTO> Orders { get; set; }
 
         public int? ClientId { get; set; }
         public ClientDTO Client { get; set; }

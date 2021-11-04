@@ -2,6 +2,7 @@
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Statistics;
 using CarShowroom.WebAPI.DTOs;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,9 +21,14 @@ namespace CarShowroom.WebAPI.Controllers
         private readonly IStatisticsService _statisticsService;
         private readonly IMapper _mapper;
         private readonly ILogger<StatisticsController> _logger;
-        public StatisticsController(IStatisticsService statisticsService, IMapper mapper, ILogger<StatisticsController> logger)
+        private readonly IJobService _jobService;
+        private readonly IRecurringJobManager _recurringJobManager;
+        public StatisticsController(IStatisticsService statisticsService, IJobService jobService, 
+            IRecurringJobManager recurringJobManager, IMapper mapper, ILogger<StatisticsController> logger)
         {
             _statisticsService = statisticsService;
+            _jobService = jobService;
+            _recurringJobManager = recurringJobManager;
             _mapper = mapper;
             _logger = logger;
         }
@@ -53,12 +59,12 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet("GetOrdersAmountInCurrentMonth")]
-        public async Task<IEnumerable<OrderDTO>> GetOrdersAmountInCurrentMonth()
+        public async Task<int> GetOrdersAmountInCurrentMonth()
         {
             _logger.LogInformation("Getting statistics of orders amount in current month");
 
             var result = await _statisticsService.GetOrdersAmountInCurrentMonth();
-            return _mapper.Map<IEnumerable<OrderDTO>>(result);
+            return result;
         }
 
         [HttpGet("GetTheMostPopularCarInService")]
@@ -82,6 +88,13 @@ namespace CarShowroom.WebAPI.Controllers
         public async Task<string> GetCarPartThatBreakDownMostOften(string make, string model)
         {
             return await _statisticsService.GetCarPartThatBreakDownMostOften(make, model);
+        }
+
+        [HttpGet("UpdatingStatisticsJob")]
+        public ActionResult CreateStatisticsJob()
+        {
+            _recurringJobManager.AddOrUpdate("statistics", () => _jobService.UpdateStatisticsJob(), Cron.Minutely);
+            return Ok();
         }
     }
 }

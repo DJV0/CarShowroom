@@ -15,6 +15,7 @@ namespace Carshowroom.DAL
         public DbSet<Car> Cars { get; set; }
         public DbSet<Part> Parts { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Statistics> Statistics { get; set; }
         public CarShowroomDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,9 +70,13 @@ namespace Carshowroom.DAL
             modelBuilder.Entity<Order>().Property(order => order.EndingOfWork).IsRequired();
             modelBuilder.Entity<Order>()
                 .HasOne(order => order.Car)
-                .WithOne(car => car.Order)
-                .HasForeignKey<Order>(order => order.CarId)
+                .WithMany(car => car.Orders)
+                .HasForeignKey(order => order.CarId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Statistics>().HasKey(s => s.Name);
+            modelBuilder.Entity<Statistics>().HasIndex(s => s.Name).IsUnique();
+            modelBuilder.Entity<Statistics>().Property(s => s.Value).IsRequired();
 
             modelBuilder.Entity<OrderEmployee>()
                 .HasOne(oe => oe.Order)

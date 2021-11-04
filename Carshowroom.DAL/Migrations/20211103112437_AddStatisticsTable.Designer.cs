@@ -4,14 +4,16 @@ using Carshowroom.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Carshowroom.DAL.Migrations
 {
     [DbContext(typeof(CarShowroomDbContext))]
-    partial class CarShowroomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211103112437_AddStatisticsTable")]
+    partial class AddStatisticsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,7 +266,9 @@ namespace Carshowroom.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CarId");
+                    b.HasIndex("CarId")
+                        .IsUnique()
+                        .HasFilter("[CarId] IS NOT NULL");
 
                     b.ToTable("Orders");
 
@@ -438,8 +442,8 @@ namespace Carshowroom.DAL.Migrations
             modelBuilder.Entity("CarShowroom.Models.Entities.Order", b =>
                 {
                     b.HasOne("CarShowroom.Models.Entities.Car", "Car")
-                        .WithMany("Orders")
-                        .HasForeignKey("CarId")
+                        .WithOne("Order")
+                        .HasForeignKey("CarShowroom.Models.Entities.Order", "CarId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Car");
@@ -485,7 +489,7 @@ namespace Carshowroom.DAL.Migrations
 
             modelBuilder.Entity("CarShowroom.Models.Entities.Car", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("CarShowroom.Models.Entities.Client", b =>

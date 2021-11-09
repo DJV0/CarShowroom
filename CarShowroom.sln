@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarShowroom.WebAPI", "CarShowroom.WebAPI\CarShowroom.WebAPI.csproj", "{B10B08AF-0518-4490-B137-8ED24C3680DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarShowroom.WebAPI", "CarShowroom.WebAPI\CarShowroom.WebAPI.csproj", "{B10B08AF-0518-4490-B137-8ED24C3680DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarShowroom.BLL", "CarShowroom.BLL\CarShowroom.BLL.csproj", "{8B24EBF7-F2AD-48BC-89BB-DCB4E030CF5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarShowroom.BLL", "CarShowroom.BLL\CarShowroom.BLL.csproj", "{8B24EBF7-F2AD-48BC-89BB-DCB4E030CF5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carshowroom.DAL", "Carshowroom.DAL\Carshowroom.DAL.csproj", "{5240FA5E-FE21-4BF1-A233-6BE57772241A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarShowroom.DAL", "Carshowroom.DAL\CarShowroom.DAL.csproj", "{5240FA5E-FE21-4BF1-A233-6BE57772241A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarShowroom.Models", "CarShowroom.Models\CarShowroom.Models.csproj", "{2767D1BD-F46E-4E1A-83A9-A6670BE471A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarShowroom.Models", "CarShowroom.Models\CarShowroom.Models.csproj", "{2767D1BD-F46E-4E1A-83A9-A6670BE471A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

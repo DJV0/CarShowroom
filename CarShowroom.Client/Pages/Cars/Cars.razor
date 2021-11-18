@@ -1,0 +1,47 @@
+﻿@page "/cars"
+@using CarShowroom.Client.Services.Interfaces
+@using CarShowroom.Client.DTOs
+@inject ICarService CarService
+
+<h3>Cars</h3>
+
+@if (cars == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Mileage</th>
+                <th>BodyStyle</th>
+                <th>Color</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in cars)
+            {
+                <tr>
+                    <td>@String.Format($"{car.Make} {car.Model}")</td>
+                    <td>@car.Year</td>
+                    <td>@car.Mileage</td>
+                    <td>@car.BodyStyle</td>
+                    <td>@car.Color</td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private IEnumerable<CarDTO> cars = new List<CarDTO>();
+    protected override async Task OnInitializedAsync()
+    {
+        cars = await CarService.GetCars();
+    }
+}

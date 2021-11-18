@@ -1,3 +1,5 @@
+using CarShowroom.Client.Infrastructure.HttpClients;
+using CarShowroom.Client.Infrastructure.HttpClients.Interfaces;
 using CarShowroom.Client.Services;
 using CarShowroom.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -20,8 +22,8 @@ namespace CarShowroom.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddHttpClient();
-            builder.Services.AddScoped<IHttpClientFactoryService, HttpClientFactoryService>();
+            builder.Services.AddHttpClient<ICarClient, CarClient>(client => 
+                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
             builder.Services.AddScoped<ICarService, CarService>();
 
             await builder.Build().RunAsync();

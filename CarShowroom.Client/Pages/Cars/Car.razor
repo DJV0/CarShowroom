@@ -1,0 +1,58 @@
+﻿@page "/car/{id:int}"
+@using CarShowroom.Client.Services.Interfaces
+@using CarShowroom.Client.DTOs
+@inject ICarService CarService
+@inject NavigationManager NavigationManager
+
+@if (car == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    if (car.ImageUrl != null)
+    {
+        <img class="rounded float-start" src="@car.ImageUrl" height="250px" width="350px"/>
+    }
+
+    <h3>@car.Make @car.Model</h3>
+    <dl>
+        <dt>Year</dt>
+        <dd>@car.Year</dd>
+        <dt>Body style</dt>
+        <dd>@car.BodyStyle</dd>
+        <dt>Mileage</dt>
+        <dd>@car.Mileage</dd>
+        <dt>Color</dt>
+        <dd>@car.Color</dd>
+        <dt>Owner</dt>
+        @if (car.Client != null)
+        {
+            <dd><button class="btn btn-link">@car.Client.Name @car.Client.LastName</button></dd>
+        }
+        else
+        {
+            <dd>-</dd> 
+        }
+    </dl>
+    <button class="btn btn-light" @onclick="@EditCar">Edit</button>
+}
+
+
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+
+    CarDetailsDTO car;
+
+    protected override async Task OnInitializedAsync()
+    {
+        car = await CarService.GetCarById(Id);
+    }
+
+    void EditCar()
+    {
+        NavigationManager.NavigateTo("/editcar");
+    }
+}

@@ -27,13 +27,13 @@ namespace CarShowroom.BLL.Services
 
         public async Task DeleteAsync(int id)
         {
-            T entity = await GetAsync(id);
+            T entity = await GetByIdAsync(id);
             if(entity == null) throw new ItemNotFoundException($"{typeof(T).Name} with id {id} not found");
             context.Set<T>().Remove(entity);
             await context.SaveChangesAsync();
         }
 
-        public virtual async Task<T> GetAsync(int id)
+        public virtual async Task<T> GetByIdAsync(int id)
         {
             var entity = await context.Set<T>().FindAsync(id);
             if (entity == null) throw new ItemNotFoundException($"{typeof(T).Name} with id {id} not found");

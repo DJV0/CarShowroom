@@ -18,19 +18,14 @@ namespace CarShowroom.BLL.Services
         {
             _client = client;
         }
-        public override async Task<Car> GetAsync(int id)
-        {
-            var car = await context.Cars
-                .Include(c => c.Client)
-                .Include(c => c.Orders)
-                .FirstOrDefaultAsync(c => c.Id == id);
-            if (car == null) throw new ItemNotFoundException($"{typeof(Car).Name} item with id {id} not found.");
-            return car;
-        }
+
         public override async Task<Car> AddAsync(Car entity)
         {
+            if(await context.Clients.FirstOrDefaultAsync(c => c.Id == entity.ClientId) == null) 
+                throw new ItemNotFoundException($"{typeof(Client).Name} with id {entity.ClientId} not found");
             entity.ImageUrl = await _client.GetCarImageUrl($"{entity.Make} {entity.Model}");
             return await base.AddAsync(entity);
         }
+
     }
 }

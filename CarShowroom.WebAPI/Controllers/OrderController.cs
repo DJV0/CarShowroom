@@ -34,22 +34,22 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDetailsDTO>> Get(int id)
+        public async Task<ActionResult<OrderDTO>> Get(int id)
         {
             _logger.LogInformation($"Getting item with id {id}.");
 
-            return Ok(_mapper.Map<OrderDetailsDTO>(await _orderService.GetAsync(id)));
+            return Ok(_mapper.Map<OrderDTO>(await _orderService.GetByIdAsync(id)));
         }
 
         [HttpPost]
-        public async Task<ActionResult<OrderDetailsDTO>> Post([FromBody] OrderDetailsDTO orderDetailsDTO)
+        public async Task<ActionResult<OrderDTO>> Post([FromBody] OrderDTO orderDetailsDTO)
         {
             var order = await _orderService.AddAsync(_mapper.Map<Order>(orderDetailsDTO));
-            return CreatedAtAction(nameof(Get), new { id = order.Id }, _mapper.Map<OrderDetailsDTO>(order));
+            return CreatedAtAction(nameof(Get), new { id = order.Id }, _mapper.Map<OrderDTO>(order));
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] OrderDetailsDTO orderDetailsDTO)
+        public async Task<ActionResult> Put(int id, [FromBody] OrderDTO orderDetailsDTO)
         {
             if (id != orderDetailsDTO.Id) ModelState.AddModelError("id", "Entered id doen't match with entity id");
             if (!ModelState.IsValid) return BadRequest(ModelState);

@@ -13,13 +13,11 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
         public OrderProfile()
         {
             CreateMap<Order, Order>().ForMember(dest=>dest.Car, opt=>opt.Ignore());
-            CreateMap<Order, OrderDTO>();
-            CreateMap<OrderDTO, Order>();
-            CreateMap<Order, OrderDetailsDTO>()
+            CreateMap<Order, OrderDTO>()
                 .ForMember(orderDto => orderDto.Employees, opt => opt
                     .MapFrom(order => order.OrderEmployees.Select(oe => oe.Employee)))
                 .ForMember(orderDto => orderDto.Parts, opt => opt.MapFrom(order => order.OrderParts.Select(op => op.Part)));
-            CreateMap<OrderDetailsDTO, Order>()
+            CreateMap<OrderDTO, Order>()
                 .ForMember(order=>order.Car, opt=>opt.Ignore())
                 .ForMember(order => order.OrderEmployees, opt => opt
                      .MapFrom(orderDto => orderDto.Employees.Select(e => new OrderEmployee { EmployeeId = e.Id })))

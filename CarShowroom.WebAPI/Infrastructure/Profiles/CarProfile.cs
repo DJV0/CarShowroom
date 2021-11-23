@@ -11,7 +11,6 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
         {
             CreateMap<Car, CarDTO>().ForMember(carDto => carDto.Year, opt=>opt.MapFrom(car=>car.Year.Year));
             CreateMap<CarDTO, Car>().ForMember(car=>car.Year, opt=>opt.MapFrom(carDto=>new DateTime(carDto.Year,1,1)));
-            CreateMap<Car, CarDetailsDTO>().ForMember(carDto => carDto.Year, opt => opt.MapFrom(car => car.Year.Year));
         }
     }
 }

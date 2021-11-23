@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarShowroom.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace CarShowroom.WebAPI.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
+        public Gender Gender { get; set; }
         public string Phone { get; set; }
+        public IEnumerable<CarDTO> Cars { get; set; }
     }
 }

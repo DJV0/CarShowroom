@@ -9,5 +9,6 @@ namespace CarShowroom.Client.Infrastructure.HttpClients.Interfaces
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(int id);
+        Task<bool> Create(T entity);
     }
 }

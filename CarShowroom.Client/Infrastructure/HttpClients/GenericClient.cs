@@ -27,5 +27,11 @@ namespace CarShowroom.Client.Infrastructure.HttpClients
         {
             return await httpClient.GetFromJsonAsync<List<T>>(requestString);
         }
+
+        public async Task<bool> Create(T entity)
+        {
+            var response = await httpClient.PostAsJsonAsync(requestString, entity);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

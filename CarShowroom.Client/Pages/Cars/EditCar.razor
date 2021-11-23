@@ -1,5 +1,8 @@
-﻿@page "/editcar"
+﻿@page "/editcar/{id:int}"
 @using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject ICarService CarService
+@inject NavigationManager NavigationManager
 
 <h3>Edit car</h3>
 <EditForm Model="@Car" OnValidSubmit="@HandleValidSubmit">
@@ -7,40 +10,50 @@
     <div class="form-group">
         <label for="make" class="form-label">Make</label>
         <InputText id="make" @bind-Value="@Car.Make" class="form-control"></InputText>
-        <ValidationMessage For="@(()=>Car.Make)"></ValidationMessage>
+        <ValidationMessage For="@()"></ValidationMessage>
     </div>
     <div class="form-group">
         <label for="model" class="form-label">Model</label>
         <InputText id="model" @bind-Value="@Car.Model" class="form-control"></InputText>
-        <ValidationMessage For="@(()=>Car.Model)"></ValidationMessage>
+        <ValidationMessage For="@()"></ValidationMessage>
     </div>
     <div class="form-group">
         <label for="year" class="form-label">Year</label>
         <InputNumber id="year" @bind-Value="@Car.Year" class="form-control"></InputNumber>
-        <ValidationMessage For="@(()=>Car.Year)"></ValidationMessage>
+        <ValidationMessage For="@()"></ValidationMessage>
     </div>
     <div class="form-group">
         <label for="mileage" class="form-label">Mileage</label>
         <InputNumber id="mileage" @bind-Value="@Car.Mileage" class="form-control"></InputNumber>
-        <ValidationMessage For="@(()=>Car.Mileage)"> </ValidationMessage>
+        <ValidationMessage For="@()"> </ValidationMessage>
     </div>
     <div class="form-group">
         <label for="bodystyle" class="form-label">Body style</label>
         <InputText id="bodystyle" @bind-Value="@Car.BodyStyle" class="form-control"></InputText>
-        <ValidationMessage For="@(()=>Car.BodyStyle)"> </ValidationMessage>
+        <ValidationMessage For="@()"> </ValidationMessage>
     </div>
     <div class="form-group">
         <label for="color" class="form-label">Color</label>
         <InputText id="color" @bind-Value="@Car.Color" class="form-control"></InputText>
-        <ValidationMessage For="@(()=>Car.Color)"> </ValidationMessage>
+        <ValidationMessage For="@()"> </ValidationMessage>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </EditForm>
-@code {
-    public CarDTO Car { get; set; } = new CarDTO();
 
-    void HandleValidSubmit()
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public CarDetailsDTO Car { get; set; } = new CarDetailsDTO();
+    public CarDTO CarModel { get; set; }
+
+    async Task HandleValidSubmit()
     {
-        Console.WriteLine($"Car is {Car.Model}!");
+        var result = await CarService.CreateCar(CarModel);
+        if (result) NavigationManager.NavigateTo("/cars");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Car = await CarService.GetCarById(Id);
     }
 }

@@ -17,6 +17,11 @@ namespace CarShowroom.Client.Services
             _carClient = carClient;
         }
 
+        public async Task<bool> CreateCar(CarDTO car)
+        {
+            return await _carClient.Create(car);
+        }
+
         public async Task<CarDetailsDTO> GetCarById(int id)
         {
             return await _carClient.GetById(id);

@@ -11,5 +11,6 @@ namespace CarShowroom.Client.Services.Interfaces
     {
         Task<IEnumerable<CarDTO>> GetCars();
         Task<CarDetailsDTO> GetCarById(int id);
+        Task<bool> CreateCar(CarDTO car);
     }
 }

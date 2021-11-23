@@ -14,8 +14,6 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
         {
             CreateMap<Part, PartDTO>();
             CreateMap<PartDTO, Part>();
-            CreateMap<Part, PartDetailsDTO>()
-                .ForMember(dest=>dest.Orders, opt=>opt.MapFrom(src=>src.OrderParts.Select(op=>op.Order)));
         }
     }
 }

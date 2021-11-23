@@ -10,7 +10,6 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
         {
             CreateMap<Client, ClientDTO>();
             CreateMap<ClientDTO, Client>();
-            CreateMap<Client, ClientDetailsDTO>();
         }
     }
 }

@@ -14,8 +14,11 @@ namespace CarShowroom.BLL.Services
     public class ClientService : Service<Client>, IClientService
     {
         public ClientService(CarShowroomDbContext context) : base(context) { }
-
-        public override async Task<Client> GetAsync(int id)
+        public override async Task<IEnumerable<Client>> GetAllAsync()
+        {
+            return await context.Clients.Include(c => c.Cars).ToListAsync();
+        }
+        public override async Task<Client> GetByIdAsync(int id)
         {
             var client = await context.Clients
                 .Include(c => c.Cars)

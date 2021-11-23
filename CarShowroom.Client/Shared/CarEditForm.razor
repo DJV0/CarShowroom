@@ -1,0 +1,49 @@
+﻿@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject ICarService CarService
+@inject NavigationManager NavigationManager
+
+<EditForm Model="@Car" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        <label for="make" class="form-label">Make</label>
+        <InputText id="make" @bind-Value="@Car.Make" class="form-control"></InputText>
+        <ValidationMessage For="@(()=>Car.Make)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="model" class="form-label">Model</label>
+        <InputText id="model" @bind-Value="@Car.Model" class="form-control"></InputText>
+        <ValidationMessage For="@(()=>Car.Model)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="year" class="form-label">Year</label>
+        <InputNumber id="year" @bind-Value="@Car.Year" class="form-control"></InputNumber>
+        <ValidationMessage For="@(()=>Car.Year)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="mileage" class="form-label">Mileage</label>
+        <InputNumber id="mileage" @bind-Value="@Car.Mileage" class="form-control"></InputNumber>
+        <ValidationMessage For="@(()=>Car.Mileage)"> </ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="bodystyle" class="form-label">Body style</label>
+        <InputText id="bodystyle" @bind-Value="@Car.BodyStyle" class="form-control"></InputText>
+        <ValidationMessage For="@(()=>Car.BodyStyle)"> </ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="color" class="form-label">Color</label>
+        <InputText id="color" @bind-Value="@Car.Color" class="form-control"></InputText>
+        <ValidationMessage For="@(()=>Car.Color)"> </ValidationMessage>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
+
+@code {
+    public CarDTO Car { get; set; } = new CarDTO();
+
+    async Task HandleValidSubmit()
+    {
+        var result = await CarService.CreateCar(Car);
+        if (result) NavigationManager.NavigateTo("/cars");
+    }
+}

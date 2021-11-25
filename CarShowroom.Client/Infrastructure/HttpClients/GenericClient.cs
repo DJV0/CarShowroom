@@ -33,5 +33,17 @@ namespace CarShowroom.Client.Infrastructure.HttpClients
             var response = await httpClient.PostAsJsonAsync(requestString, entity);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> Update(int entityId, T entity)
+        {
+            var response = await httpClient.PutAsJsonAsync($"{requestString}/{entityId}", entity);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            var response = await httpClient.DeleteAsync($"{requestString}/{id}");
+            return response.IsSuccessStatusCode;
+        }
     }
 }

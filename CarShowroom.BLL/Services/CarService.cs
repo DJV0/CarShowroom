@@ -21,8 +21,8 @@ namespace CarShowroom.BLL.Services
 
         public override async Task<Car> AddAsync(Car entity)
         {
-            if(await context.Clients.FirstOrDefaultAsync(c => c.Id == entity.ClientId) == null) 
-                throw new ItemNotFoundException($"{typeof(Client).Name} with id {entity.ClientId} not found");
+            if(entity.ClientId.HasValue && await context.Clients.FindAsync(entity.ClientId) == null)
+                throw new ItemNotFoundException($"{typeof(Client).Name} item with id {entity.ClientId} not found.");
             entity.ImageUrl = await _client.GetCarImageUrl($"{entity.Make} {entity.Model}");
             return await base.AddAsync(entity);
         }

@@ -1,0 +1,44 @@
+﻿@page "/client/{id:int}"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IClientService ClientService
+@inject NavigationManager NavigationManager
+
+@if (client == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>@client.Name @client.LastName</h3>
+    <dl>
+        <dt>Phone</dt>
+        <dd>@client.Phone</dd>
+        <dt>Cars</dt>
+        <dd>
+            <div class="btn-group-sm" role="group">
+            @foreach (var car in client.Cars)
+            {
+                <button class="btn btn-link" @onclick="(()=>ShowCar(car.Id))">@car.Make @car.Model @car.Year</button>
+            }
+            </div>
+        </dd>
+
+    </dl>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    ClientDTO client;
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = await ClientService.GetClientById(Id);
+    }
+
+    void ShowCar(int id)
+    {
+        NavigationManager.NavigateTo($"/car/{id}");
+    }
+}

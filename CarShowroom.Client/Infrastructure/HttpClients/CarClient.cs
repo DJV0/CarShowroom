@@ -12,10 +12,5 @@ namespace CarShowroom.Client.Infrastructure.HttpClients
     public class CarClient : GenericClient<CarDTO>, ICarClient
     {
         public CarClient(HttpClient client) : base(client, "car") { }
-
-        public new async Task<CarDetailsDTO> GetById(int id)
-        {
-            return await httpClient.GetFromJsonAsync<CarDetailsDTO>($"{requestString}/{id}");
-        }
     }
 }

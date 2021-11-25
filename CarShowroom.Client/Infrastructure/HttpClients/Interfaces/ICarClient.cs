@@ -8,6 +8,5 @@ namespace CarShowroom.Client.Infrastructure.HttpClients.Interfaces
 {
     public interface ICarClient : IGenericClient<CarDTO>
     {
-        new Task<CarDetailsDTO> GetById(int id);
     }
 }

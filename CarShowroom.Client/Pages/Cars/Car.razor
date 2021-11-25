@@ -29,7 +29,7 @@ else
         <dt>Owner</dt>
         @if (car.ClientId.HasValue)
         {
-            <dd><button class="btn btn-link">@carOwner.Name @carOwner.LastName</button></dd>
+            <dd><button class="btn btn-link" @onclick="(()=>ShowClient(car.ClientId))">@carOwner.Name @carOwner.LastName</button></dd>
         }
         else
         {
@@ -46,8 +46,8 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    CarDTO car = new CarDTO();
-    ClientDTO carOwner = new ClientDTO();
+    CarDTO car;
+    ClientDTO carOwner;
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,5 +63,10 @@ else
     {
         var result = await CarService.DeleteCar(id);
         if(result) NavigationManager.NavigateTo($"/cars");
+    }
+
+    void ShowClient(int? id)
+    {
+        NavigationManager.NavigateTo($"/client/{id}");
     }
 }

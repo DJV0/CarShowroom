@@ -10,7 +10,9 @@ namespace CarShowroom.Client.Services.Interfaces
     public interface ICarService
     {
         Task<IEnumerable<CarDTO>> GetCars();
-        Task<CarDetailsDTO> GetCarById(int id);
+        Task<CarDTO> GetCarById(int id);
         Task<bool> CreateCar(CarDTO car);
+        Task<bool> UpdateCar(int carId, CarDTO car);
+        Task<bool> DeleteCar(int id);
     }
 }

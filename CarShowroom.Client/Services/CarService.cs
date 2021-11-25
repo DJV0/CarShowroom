@@ -22,7 +22,12 @@ namespace CarShowroom.Client.Services
             return await _carClient.Create(car);
         }
 
-        public async Task<CarDetailsDTO> GetCarById(int id)
+        public async Task<bool> DeleteCar(int id)
+        {
+            return await _carClient.Delete(id);
+        }
+
+        public async Task<CarDTO> GetCarById(int id)
         {
             return await _carClient.GetById(id);
         }
@@ -30,6 +35,11 @@ namespace CarShowroom.Client.Services
         public async Task<IEnumerable<CarDTO>> GetCars()
         {
             return await _carClient.GetAll();
+        }
+
+        public async Task<bool> UpdateCar(int carId,CarDTO car)
+        {
+            return await _carClient.Update(carId, car);
         }
     }
 }

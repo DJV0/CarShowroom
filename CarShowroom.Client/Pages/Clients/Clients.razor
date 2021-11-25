@@ -1,0 +1,44 @@
+﻿@page "/clients"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IClientService ClientService
+@inject NavigationManager NavigationManager
+
+<h3>Clients</h3>
+@if(!clients.Any())
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Full name</td>
+                <td>Phone</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr>
+                    <td><button class="btn btn-link" @onclick="(()=>ShowClient(client.Id))">@client.Name @client.LastName</button></td>
+                    <td>@client.Phone</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    IEnumerable<ClientDTO> clients = new List<ClientDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        clients = await ClientService.GetClients();
+    }
+
+    void ShowClient(int id)
+    {
+        NavigationManager.NavigateTo($"/client/{id}");
+    }
+}

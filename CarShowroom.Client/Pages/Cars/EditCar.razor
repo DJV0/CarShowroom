@@ -43,13 +43,12 @@
 @code {
     [Parameter]
     public int Id { get; set; }
-    public CarDetailsDTO Car { get; set; } = new CarDetailsDTO();
-    public CarDTO CarModel { get; set; }
+    CarDTO Car = new CarDTO();
 
     async Task HandleValidSubmit()
     {
-        var result = await CarService.CreateCar(CarModel);
-        if (result) NavigationManager.NavigateTo("/cars");
+        var result = await CarService.UpdateCar(Id, Car);
+        if (result) NavigationManager.NavigateTo($"/car/{Id}");
     }
 
     protected override async Task OnInitializedAsync()

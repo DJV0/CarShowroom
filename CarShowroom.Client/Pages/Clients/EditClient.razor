@@ -1,0 +1,89 @@
+﻿@page "/editclient/{id:int}"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IClientService ClientService
+@inject ICarService CarService
+@inject NavigationManager NavigationManager
+
+@if (client == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>Edit client</h3>
+    <EditForm Model="@client" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="form-group">
+            <label for="name" class="form-lable">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="@client.Name"></InputText>
+            <ValidationMessage For="@(() => client.Name)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="form-lable">Last Name</label>
+            <InputText id="lastname" class="form-control" @bind-Value="@client.LastName"></InputText>
+            <ValidationMessage For="@(() => client.LastName)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="form-lable">Phone</label>
+            <InputText id="phone" class="form-control" @bind-Value="@client.Phone"></InputText>
+            <ValidationMessage For="@(() => client.Phone)"></ValidationMessage>
+        </div>
+        <h4>Cars</h4>
+        <div class="form-group">
+            <div class="btn-group">
+                @foreach (var car in client.Cars)
+                {
+                    <a class="btn btn-block" @onclick="(() => RemoveClientCar(car.Id))">@car.Make @car.Model @car.Year</a>
+                }
+            </div>
+            <div class="input-group mb-3">
+                <input id="CarInput" class="form-control" type="text" list="Cars" @onchange="@((args) => inputCar = args.Value.ToString())" placeholder="Type to search..." aria-describedby="button-add" />
+                <a class="btn btn-outline-primary" id="button-add" @onclick="@(()=>AddNewClientCar())">Add</a>
+                <datalist class="col-4" id="Cars">
+                    @foreach (var car in carList)
+                    {
+                        <option value="@car.Make @car.Model @car.Year"></option>
+
+                    }
+                </datalist>
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    ClientDTO client;
+    IEnumerable<CarDTO> carList = new List<CarDTO>();
+    string inputCar = String.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = await ClientService.GetClientById(Id);
+        carList = (await CarService.GetCars()).Where(c => c.ClientId == null);
+    }
+
+    async Task HandleValidSubmit()
+    {
+        var result = await ClientService.UpdateClient(Id, client);
+        if (result) NavigationManager.NavigateTo($"/client/{Id}");
+    }
+
+    void RemoveClientCar(int id)
+    {
+        var car = client.Cars.FirstOrDefault(c => c.Id == id);
+        if(car != null) client.Cars.Remove(car);
+    }
+
+    void AddNewClientCar()
+    {
+        CarDTO selectedCar = carList.FirstOrDefault(c => new String($"{c.Make} {c.Model} {c.Year}") == inputCar);
+        if (selectedCar == null) return;
+        client.Cars.Add(selectedCar);
+    }
+}

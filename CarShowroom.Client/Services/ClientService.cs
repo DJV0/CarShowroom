@@ -30,5 +30,10 @@ namespace CarShowroom.Client.Services
         {
             return await _clientClient.GetAll();
         }
+
+        public async Task<bool> UpdateClient(int carId, ClientDTO client)
+        {
+            return await _clientClient.Update(carId, client);
+        }
     }
 }

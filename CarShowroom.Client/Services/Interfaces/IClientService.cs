@@ -11,7 +11,7 @@ namespace CarShowroom.Client.Services.Interfaces
         Task<IEnumerable<ClientDTO>> GetClients();
         Task<ClientDTO> GetClientById(int id);
         Task<bool> CreateClient(ClientDTO client);
-        //Task<bool> UpdateCar(int carId, CarDTO car);
-        //Task<bool> DeleteCar(int id);
+        Task<bool> UpdateClient(int carId, ClientDTO client);
+        //Task<bool> DeleteClient(int id);
     }
 }

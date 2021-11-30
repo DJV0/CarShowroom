@@ -26,8 +26,12 @@ namespace CarShowroom.Client
                                                             client.BaseAddress = new Uri("https://localhost:44362/api/"));
             builder.Services.AddHttpClient<IClientClient, ClientClient>(client =>
                                                             client.BaseAddress = new Uri("https://localhost:44362/api/"));
+            builder.Services.AddHttpClient<IPartClient, PartClient>(client =>
+                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
+
             builder.Services.AddScoped<ICarService, CarService>();
             builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<IPartService, PartService>();
 
             await builder.Build().RunAsync();
         }

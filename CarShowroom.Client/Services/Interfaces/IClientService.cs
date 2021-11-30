@@ -12,6 +12,6 @@ namespace CarShowroom.Client.Services.Interfaces
         Task<ClientDTO> GetClientById(int id);
         Task<bool> CreateClient(ClientDTO client);
         Task<bool> UpdateClient(int carId, ClientDTO client);
-        //Task<bool> DeleteClient(int id);
+        Task<bool> DeleteClient(int id);
     }
 }

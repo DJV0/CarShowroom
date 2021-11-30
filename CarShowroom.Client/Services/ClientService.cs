@@ -21,6 +21,11 @@ namespace CarShowroom.Client.Services
             return await _clientClient.Create(client);
         }
 
+        public async Task<bool> DeleteClient(int id)
+        {
+            return await _clientClient.Delete(id);
+        }
+
         public async Task<ClientDTO> GetClientById(int id)
         {
             return await _clientClient.GetById(id);

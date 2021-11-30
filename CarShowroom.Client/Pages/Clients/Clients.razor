@@ -5,12 +5,13 @@
 @inject NavigationManager NavigationManager
 
 <h3>Clients</h3>
-@if(!clients.Any())
+@if (!clients.Any())
 {
     <span><em>Loading...</em></span>
 }
 else
 {
+    <button class="btn btn-light" @onclick="@CreateClient">Create client</button>
     <table class="table">
         <thead>
             <tr>
@@ -22,7 +23,7 @@ else
             @foreach (var client in clients)
             {
                 <tr>
-                    <td><button class="btn btn-link" @onclick="(()=>ShowClient(client.Id))">@client.Name @client.LastName</button></td>
+                    <td><button class="btn btn-link" @onclick="@(()=>ShowClient(client.Id))">@client.Name @client.LastName</button></td>
                     <td>@client.Phone</td>
                 </tr>
             }
@@ -40,5 +41,10 @@ else
     void ShowClient(int id)
     {
         NavigationManager.NavigateTo($"/client/{id}");
+    }
+
+    void CreateClient()
+    {
+        NavigationManager.NavigateTo("/createclient");
     }
 }

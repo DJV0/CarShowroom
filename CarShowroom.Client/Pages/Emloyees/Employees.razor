@@ -1,0 +1,47 @@
+﻿@page "/employees"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IEmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+@if(employees == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>Employees</h3>
+    <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createemployee"))">Create employee</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Phone</th>
+                <th>Position</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in employees)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/employee/{employee.Id}"))">
+                        @employee.Name @employee.LastName</button> 
+                    </td>
+                    <td>@employee.Phone</td>
+                    <td>@employee.Position</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    IEnumerable<EmployeeDTO> employees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await EmployeeService.GetEmployees();
+    }
+}

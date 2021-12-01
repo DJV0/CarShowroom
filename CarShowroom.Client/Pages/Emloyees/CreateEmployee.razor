@@ -1,0 +1,42 @@
+﻿@page "/createemployee"
+@using CarShowroom.Client.Services.Interfaces
+@using CarShowroom.Client.DTOs
+@inject IEmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+<h3>Add new employee</h3>
+<EditForm Model="@employee" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        <label for="name" class="form-label">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="@employee.Name"></InputText>
+        <ValidationMessage For="@(()=>employee.Name)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="lastname" class="form-label"></label>
+        <InputText id="lastname" class="form-control" @bind-Value="@employee.LastName"></InputText>
+        <ValidationMessage For="@(()=>employee.LastName)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="phone" class="form-label">Phone</label>
+        <InputText id="phone" class="form-control" @bind-Value="@employee.Phone"></InputText>
+        <ValidationMessage For="@(()=>employee.Phone)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="position" class="form-label">Position</label>
+        <InputText id="position" class="form-control" @bind-Value="@employee.Position"></InputText>
+        <ValidationMessage For="@(()=>employee.Position)"></ValidationMessage>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    EmployeeDTO employee = new EmployeeDTO();
+
+    async Task HandleValidSubmit()
+    {
+        var result = await EmployeeService.CreateEmployee(employee);
+        if (result) NavigationManager.NavigateTo("/employees");
+    }
+}

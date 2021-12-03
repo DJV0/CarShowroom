@@ -1,0 +1,149 @@
+﻿@page "/editorder/{id:int}"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IOrderService OrderService
+@inject ICarService CarService
+@inject IEmployeeService EmployeeService
+@inject IPartService PartService
+@inject NavigationManager NavigationManager
+
+@if (order == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>Edit order</h3>
+    <EditForm Model="@order" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="form-group">
+            <label for="beginningofwork" class="form-label">Start</label>
+            <InputDate id="beginningofwork" class="form-control" @bind-Value="@order.BeginningOfWork"></InputDate>
+            <ValidationMessage For="@(() => order.BeginningOfWork)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="endingofwork" class="form-label">End</label>
+            <InputDate id="endingofwork" class="form-control" @bind-Value="@order.EndingOfWork"></InputDate>
+            <ValidationMessage For="@(() => order.EndingOfWork)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="cars" class="form-label">Car</label>
+            <input class="form-control" list="carList" id="cars" value="@order.Car.Make @order.Car.Model @order.Car.Year" 
+                   @onchange="@((args)=> AddCar(args.Value.ToString()))" placeholder="Type to search...">
+            <datalist id="carList">
+                @foreach (var car in cars)
+                {
+                    <option value="@car.Make @car.Model @car.Year"></option>
+                }
+            </datalist>
+            <ValidationMessage For="@(()=>order.CarId)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <h4>Employees</h4>
+            <div class="btn-group">
+                @foreach (var employee in order.Employees)
+                {
+                    <a class="btn btn-block" @onclick="@(() => order.Employees.Remove(order.Employees.First(e => e.Id == employee.Id)))">
+                        @employee.Name @employee.LastName
+                    </a>
+                }
+
+            </div>
+            <div class="input-group mb-3">
+                <input id="employeeInput" class="form-control" type="text" list="Employees"
+                       @oninput="@((args) => inputEmployee = args.Value.ToString())" placeholder="Type to search..." aria-describedby="button-add" />
+                <a class="btn btn-outline-primary" id="button-add" @onclick="@(() => AddEmployee())">Add</a>
+                <datalist class="col-4" id="Employees">
+                    @foreach (var employee in filteredEmployees)
+                    {
+                        <option value="@employee.Name @employee.LastName"></option>
+
+                    }
+                </datalist>
+            </div>
+        </div>
+        <div class="form-group">
+            <h4>Parts</h4>
+            <div class="btn-group">
+                @if (order.Parts != null)
+                {
+                    @foreach (var part in order.Parts)
+                    {
+                        <a class="btn btn-block" @onclick="@(() => order.Parts.Remove(order.Parts.First(p => p.Id == part.Id)))">
+                            @part.Name
+                        </a>
+                    }
+                }
+
+            </div>
+            <div class="input-group mb-3">
+                <input id="partInput" class="form-control" type="text" list="Parts"
+                       @oninput="@((args) => inputPart = args.Value.ToString())" placeholder="Type to search..." aria-describedby="button-add" />
+                <a class="btn btn-outline-primary" id="button-add" @onclick="@(() => AddPart())">Add</a>
+                <datalist class="col-4" id="Parts">
+                    @foreach (var part in filteredParts)
+                    {
+                        <option value="@part.Name"></option>
+
+                    }
+                </datalist>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    OrderDTO order;
+    IEnumerable<EmployeeDTO> employees = new List<EmployeeDTO>();
+    IEnumerable<PartDTO> parts = new List<PartDTO>();
+    IEnumerable<CarDTO> cars = new List<CarDTO>();
+    string inputCar = String.Empty;
+    string inputEmployee = String.Empty;
+    string inputPart = String.Empty;
+    List<EmployeeDTO> filteredEmployees => employees
+        .Where(e => e.Name.ToLower().Contains(inputEmployee.ToLower()) ||
+                    e.LastName.ToLower().Contains(inputEmployee.ToLower()))
+        .ToList();
+    List<PartDTO> filteredParts => parts
+        .Where(p => p.Name.ToLower().Contains(inputPart.ToLower()) || p.SerialNumber.ToLower().Contains(inputPart.ToLower()))
+        .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await OrderService.GetOrderById(Id);
+        cars = (await CarService.GetCars()).Where(c => c.ClientId != null);
+        employees = await EmployeeService.GetEmployees();
+        parts = await PartService.GetParts();
+    }
+
+    async Task HandleValidSubmit()
+    {
+        var result = await OrderService.UpdateOrder(Id, order);
+        if (result) NavigationManager.NavigateTo($"/order/{Id}");
+    }
+
+    void AddCar(string input)
+    {
+        var selectedCar = cars.FirstOrDefault(c => $"{c.Make} {c.Model} {c.Year}" == input);
+        if (selectedCar == null) return;
+        order.CarId = selectedCar.Id;
+    }
+
+    void AddEmployee()
+    {
+        var selectedEmployee = employees.FirstOrDefault(e => $"{e.Name} {e.LastName}" == inputEmployee);
+        if (selectedEmployee == null || order.Employees.Contains(selectedEmployee)) return;
+        order.Employees.Add(selectedEmployee);
+    }
+
+    void AddPart()
+    {
+        var selectedPart = parts.FirstOrDefault(p => p.Name == inputPart);
+        if (selectedPart == null || order.Parts.Contains(selectedPart)) return;
+        order.Parts.Add(selectedPart);
+    }
+}

@@ -1,0 +1,46 @@
+﻿@page "/createclient"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IClientService ClientService
+@inject NavigationManager NavigationManager
+
+<h3>Add new client</h3>
+<EditForm Model="@client" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        <label for="name" class="form-lable">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="@client.Name"></InputText>
+        <ValidationMessage For="@(() => client.Name)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="lastname" class="form-lable">Last Name</label>
+        <InputText id="lastname" class="form-control" @bind-Value="@client.LastName"></InputText>
+        <ValidationMessage For="@(() => client.LastName)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="gender" class="form-lable">Gender</label>
+        <InputSelect id="gender" class="form-control" @bind-Value="@client.Gender">
+            @foreach (var gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => client.Gender)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="phone" class="form-lable">Phone</label>
+        <InputText id="phone" class="form-control" @bind-Value="@client.Phone"></InputText>
+        <ValidationMessage For="@(() => client.Phone)"></ValidationMessage>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    ClientDTO client = new ClientDTO();
+
+    async Task HandleValidSubmit()
+    {
+        var result = await ClientService.CreateClient(client);
+        if (result) NavigationManager.NavigateTo("/clients");
+    }
+}

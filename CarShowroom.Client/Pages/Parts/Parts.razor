@@ -1,0 +1,53 @@
+﻿@page "/parts"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IPartService PartService
+@inject NavigationManager NavigationManager
+
+<h3>Parts</h3>
+@if (parts == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <button class="btn btn-light" @onclick="@CreatePart">Create part</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Serial Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var part in parts)
+            {
+                <tr>
+                    <td><button class="btn btn-link" @onclick="@(()=>ShowPart(part.Id))">@part.Name</button></td>
+                    <td>@part.SerialNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    IEnumerable<PartDTO> parts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        parts = await PartService.GetParts();
+    }
+
+    void CreatePart()
+    {
+        NavigationManager.NavigateTo("/createpart");
+    }
+
+    void ShowPart(int id)
+    {
+        NavigationManager.NavigateTo($"/part/{id}");
+    }
+}

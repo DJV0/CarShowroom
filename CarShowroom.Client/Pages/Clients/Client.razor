@@ -1,0 +1,95 @@
+﻿@page "/client/{id:int}"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IClientService ClientService
+@inject ICarService CarService
+@inject NavigationManager NavigationManager
+
+@if (client == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>@client.Name @client.LastName</h3>
+    <dl>
+        <dt>Phone</dt>
+        <dd>@client.Phone</dd>
+        <dt>Cars <button class="btn btn-sm btn-light" @onclick="(()=>ShowCarForm())">New car</button></dt>
+        <dd>
+            <div class="btn-group-sm" role="group">
+                @foreach (var car in client.Cars)
+                {
+                    <button class="btn btn-link" @onclick="(()=>ShowCar(car.Id))">@car.Make @car.Model @car.Year</button>
+                }
+            </div>
+        </dd>
+        <dd>
+
+            @if (showCarForm)
+            {
+                <div class="input-group mb-3">
+                    <input id="CarInput" class="form-control" type="text" list="Cars" @onchange="@((args) => inputCar = args.Value.ToString())" placeholder="Type to search..." aria-describedby="button-add" />
+                    <button class="btn btn-outline-primary" id="button-add" @onclick="(()=>AddNewClientCar())">Add</button>
+                    <datalist class="col-4" id="Cars">
+                        @foreach (var car in carList)
+                        {
+                            <option value="@car.Make @car.Model @car.Year"></option>
+
+                        }
+                    </datalist>
+
+                </div>
+            }
+        </dd>
+    </dl>
+    <button class="btn btn-light" @onclick="(()=>EditClient(client.Id))">Edit</button>
+    <button class="btn btn-danger" @onclick="(()=>DeleteClient(client.Id))">Delete</button>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    ClientDTO client;
+    bool showCarForm = false;
+    IEnumerable<CarDTO> carList = new List<CarDTO>();
+    string inputCar = String.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = await ClientService.GetClientById(Id);
+    }
+
+    void ShowCar(int id)
+    {
+        NavigationManager.NavigateTo($"/car/{id}");
+    }
+    async Task ShowCarForm()
+    {
+        showCarForm = !showCarForm;
+        if (!carList.Any())
+        {
+            carList = (await CarService.GetCars()).Where(c => c.ClientId == null);
+        }
+
+    }
+    async Task AddNewClientCar()
+    {
+        CarDTO selectedCar = carList.FirstOrDefault(c => new String($"{c.Make} {c.Model} {c.Year}") == inputCar);
+        if (selectedCar == null) return;
+        client.Cars.Add(selectedCar);
+        await ClientService.UpdateClient(Id, client);
+    }
+
+    void EditClient(int id)
+    {
+        NavigationManager.NavigateTo($"/editclient/{id}");
+    }
+
+    async Task DeleteClient(int id)
+    {
+        var result = await ClientService.DeleteClient(id);
+        if (result) NavigationManager.NavigateTo("/clients");
+    }
+}

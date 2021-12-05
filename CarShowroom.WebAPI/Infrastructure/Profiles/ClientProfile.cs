@@ -8,9 +8,8 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
     {
         public ClientProfile()
         {
-            CreateMap<Client, ClientDTO>();
-            CreateMap<ClientDTO, Client>();
-            CreateMap<Client, ClientDetailsDTO>();
+            CreateMap<Client, Client>();
+            CreateMap<Client, ClientDTO>().ReverseMap();
         }
     }
 }

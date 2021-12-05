@@ -20,7 +20,7 @@ namespace CarShowroom.BLL.Services
         {
             return await context.Orders.Include(o=>o.Car).ToListAsync();
         }
-        public override async Task<Order> GetAsync(int id)
+        public override async Task<Order> GetByIdAsync(int id)
         {
             var order = await context.Orders
                 .Include(o => o.Car)
@@ -34,7 +34,7 @@ namespace CarShowroom.BLL.Services
         }
         public override async Task UpdateAsync(Order entity)
         {
-            var order = await GetAsync(entity.Id);
+            var order = await GetByIdAsync(entity.Id);
             _mapper.Map(entity, order);
             await base.UpdateAsync(order);
         }

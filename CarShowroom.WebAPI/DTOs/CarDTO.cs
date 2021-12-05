@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CarShowroom.WebAPI.DTOs
 {
@@ -11,7 +12,7 @@ namespace CarShowroom.WebAPI.DTOs
         public int Mileage { get; set; }
         public string BodyStyle { get; set; }
         public string Color { get; set; }
-
+        public string ImageUrl { get; set; }
         public int? ClientId { get; set; }
     }
 }

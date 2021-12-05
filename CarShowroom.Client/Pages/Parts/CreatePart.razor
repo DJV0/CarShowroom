@@ -1,0 +1,31 @@
+﻿@page "/createpart"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IPartService PartService
+@inject NavigationManager NavigationManager
+
+<h3>Create part</h3>
+<EditForm Model="@part" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        <label for="name" class="form-label">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="@part.Name"></InputText>
+        <ValidationMessage For="@(()=>part.Name)"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="serialNumber" class="form-label">Serial number</label>
+        <InputText id="serialNumber" class="form-control" @bind-Value="@part.SerialNumber"></InputText>
+        <ValidationMessage For="@(()=>part.SerialNumber)"></ValidationMessage>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    PartDTO part = new PartDTO();
+
+    async Task HandleValidSubmit()
+    {
+        var result = await PartService.CreatePart(part);
+        if (result) NavigationManager.NavigateTo("/parts");
+    }
+}

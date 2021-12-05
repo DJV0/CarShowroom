@@ -1,0 +1,40 @@
+﻿@page "/employee/{id:int}"
+@using CarShowroom.Client.Services.Interfaces
+@using CarShowroom.Client.DTOs
+@inject IEmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+
+@if (employee == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>@employee.Name @employee.LastName</h3>
+    <dl>
+        <dt>Phone</dt>
+        <dd>@employee.Phone</dd>
+        <dt>Position</dt>
+        <dd>@employee.Position</dd>
+    </dl>
+    <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo($"/editemployee/{employee.Id}"))">Edit</button>
+    <button class="btn btn-danger" @onclick="@(()=> DeleteEmployee(employee.Id))">Delete</button>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    EmployeeDTO employee;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await EmployeeService.GetEmployeeById(Id);
+    }
+
+    async Task DeleteEmployee(int id)
+    {
+        var result = await EmployeeService.DeleteEmployee(id);
+        if (result) NavigationManager.NavigateTo("/employees");
+    }
+}

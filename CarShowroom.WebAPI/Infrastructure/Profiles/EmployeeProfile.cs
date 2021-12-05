@@ -14,8 +14,6 @@ namespace CarShowroom.WebAPI.Infrastructure.Profiles
         {
             CreateMap<Employee, EmployeeDTO>();
             CreateMap<EmployeeDTO, Employee>();
-            CreateMap<Employee, EmployeeDetailsDTO>()
-                .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.OrderEmployees.Select(oe=>oe.Order)));
         }
     }
 }

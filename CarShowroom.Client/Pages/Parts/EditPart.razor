@@ -1,0 +1,46 @@
+﻿@page "/editpart/{id:int}"
+@using CarShowroom.Client.DTOs
+@using CarShowroom.Client.Services.Interfaces
+@inject IPartService PartService
+@inject NavigationManager NavigationManager
+
+@if(part == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>Edit part</h3>
+    <EditForm Model="@part" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="@part.Name"></InputText>
+            <ValidationMessage For="@(()=>part.Name)"></ValidationMessage>
+        </div>
+        <div class="form-group">
+            <label for="serialnumber" class="form-label">Serial Number</label>
+            <InputText id="serialnumber" class="form-control" @bind-Value="@part.SerialNumber"></InputText>
+            <ValidationMessage For="@(()=>part.SerialNumber)"></ValidationMessage>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    PartDTO part;
+
+    protected override async Task OnInitializedAsync()
+    {
+        part = await PartService.GetPartById(Id);
+    }
+
+    async Task HandleValidSubmit()
+    {
+        var result = await PartService.UpdatePart(Id,part);
+        if (result) NavigationManager.NavigateTo($"/part/{Id}");
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page "/orders"
+@using CarShowroom.Client.Services.Interfaces
+@using CarShowroom.Client.DTOs
+@inject IOrderService OrderService
+@inject NavigationManager NavigationManager
+
+@if (orders == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    <h3>Orders</h3>
+    <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createorder"))">Create order</button>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Car</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr @onclick="@(()=>NavigationManager.NavigateTo($"/order/{order.Id}"))">
+                    <td>
+                        <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/car/{order.CarId}"))">
+                            @order.Car.Make @order.Car.Model @order.Car.Year
+                        </button>
+                    </td>
+                    <td>@order.BeginningOfWork.ToString("dd/MM/yyyy")</td>
+                    <td>@order.EndingOfWork.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    IEnumerable<OrderDTO> orders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderService.GetOrders();
+    }
+}

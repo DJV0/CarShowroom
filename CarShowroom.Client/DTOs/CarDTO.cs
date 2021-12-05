@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CarShowroom.WebAPI.DTOs
+namespace CarShowroom.Client.DTOs
 {
-    public class CarDetailsDTO
+    public class CarDTO
     {
         public int Id { get; set; }
         public string Make { get; set; }
@@ -15,10 +13,6 @@ namespace CarShowroom.WebAPI.DTOs
         public string BodyStyle { get; set; }
         public string Color { get; set; }
         public string ImageUrl { get; set; }
-
-        public IEnumerable<OrderDTO> Orders { get; set; }
-
         public int? ClientId { get; set; }
-        public ClientDTO Client { get; set; }
     }
 }

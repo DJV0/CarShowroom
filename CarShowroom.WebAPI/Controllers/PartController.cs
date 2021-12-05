@@ -34,11 +34,11 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PartDetailsDTO>> Get(int id)
+        public async Task<ActionResult<PartDTO>> Get(int id)
         {
             _logger.LogInformation($"Getting item with id {id}.");
 
-            return Ok(_mapper.Map<PartDetailsDTO>(await _partService.GetAsync(id)));
+            return Ok(_mapper.Map<PartDTO>(await _partService.GetByIdAsync(id)));
         }
 
         [HttpPost]

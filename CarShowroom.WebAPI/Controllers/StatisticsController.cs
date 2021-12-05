@@ -93,7 +93,7 @@ namespace CarShowroom.WebAPI.Controllers
         [HttpGet("UpdatingStatisticsJob")]
         public ActionResult CreateStatisticsJob()
         {
-            _recurringJobManager.AddOrUpdate("statistics", () => _jobService.UpdateStatisticsJob(), Cron.Minutely);
+            _recurringJobManager.AddOrUpdate("statistics", () => _jobService.UpdateStatisticsJob(), Cron.Daily);
             return Ok();
         }
     }

@@ -1,0 +1,72 @@
+﻿@page "/car/{id:int}"
+@using CarShowroom.Client.Services.Interfaces
+@using CarShowroom.Client.DTOs
+@inject ICarService CarService
+@inject IClientService ClientService
+@inject NavigationManager NavigationManager
+
+@if (car == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
+    if (car.ImageUrl != null)
+    {
+        <img class="rounded float-start" src="@car.ImageUrl" height="250px" width="350px" />
+    }
+
+    <h3>@car.Make @car.Model</h3>
+    <dl>
+        <dt>Year</dt>
+        <dd>@car.Year</dd>
+        <dt>Body style</dt>
+        <dd>@car.BodyStyle</dd>
+        <dt>Mileage</dt>
+        <dd>@car.Mileage</dd>
+        <dt>Color</dt>
+        <dd>@car.Color</dd>
+        <dt>Owner</dt>
+        @if (car.ClientId.HasValue)
+        {
+            <dd><button class="btn btn-link" @onclick="(()=>ShowClient(car.ClientId))">@carOwner.Name @carOwner.LastName</button></dd>
+        }
+        else
+        {
+            <dd>-</dd>
+        }
+    </dl>
+    <button class="btn btn-light" @onclick="@(()=>EditCar(car.Id))">Edit</button>
+    <button class="btn btn-danger" @onclick="@(()=> DeleteCar(car.Id))">Delete</button>
+}
+
+
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+
+    CarDTO car;
+    ClientDTO carOwner;
+
+    protected override async Task OnInitializedAsync()
+    {
+        car = await CarService.GetCarById(Id);
+        if (car.ClientId.HasValue) carOwner = await ClientService.GetClientById(car.ClientId.GetValueOrDefault());
+    }
+
+    void EditCar(int id)
+    {
+        NavigationManager.NavigateTo($"/editcar/{id}");
+    }
+    async Task DeleteCar(int id)
+    {
+        var result = await CarService.DeleteCar(id);
+        if(result) NavigationManager.NavigateTo($"/cars");
+    }
+
+    void ShowClient(int? id)
+    {
+        NavigationManager.NavigateTo($"/client/{id}");
+    }
+}

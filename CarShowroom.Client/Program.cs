@@ -22,6 +22,8 @@ namespace CarShowroom.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
             builder.Services.AddHttpClient<ICarClient, CarClient>(client => 
                                                             client.BaseAddress = new Uri("https://localhost:44362/api/"));
             builder.Services.AddHttpClient<IClientClient, ClientClient>(client =>
@@ -38,6 +40,7 @@ namespace CarShowroom.Client
             builder.Services.AddScoped<IPartService, PartService>();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+
 
             await builder.Build().RunAsync();
         }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -48,6 +49,8 @@ namespace CarShowroom.WebAPI
 
             services.AddDbContext<CarShowroomDbContext>(options => 
                                                     options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
+
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CarShowroomDbContext>();
 
             services.AddAutoMapper(typeof(ClientProfile), typeof(CarProfile), typeof(EmployeeProfile),
                 typeof(PartProfile), typeof(OrderProfile));
@@ -102,6 +105,7 @@ namespace CarShowroom.WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

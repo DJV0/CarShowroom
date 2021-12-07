@@ -1,8 +1,10 @@
 ﻿@page "/cars"
 @using CarShowroom.Client.Services.Interfaces
 @using CarShowroom.Client.DTOs
+@using Microsoft.AspNetCore.Authorization
 @inject ICarService CarService
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 <h3>Cars</h3>
 

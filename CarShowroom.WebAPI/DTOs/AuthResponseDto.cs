@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CarShowroom.WebAPI.DTOs
 {
-    public class AuthResponseDto
+    public class AuthResponseDTO
     {
         public bool IsAuthSuccessful { get; set; }
         public string ErrorMessage { get; set; }

@@ -54,14 +54,14 @@ namespace CarShowroom.WebAPI.Controllers
             var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
-                return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
+                return Unauthorized(new AuthResponseDTO { ErrorMessage = "Invalid Authentication" });
 
             var signingCredentials = GetSigningCredentials();
             var claims = GetClaims(user);
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = token });
+            return Ok(new AuthResponseDTO { IsAuthSuccessful = true, Token = token });
         }
 
         private SigningCredentials GetSigningCredentials()

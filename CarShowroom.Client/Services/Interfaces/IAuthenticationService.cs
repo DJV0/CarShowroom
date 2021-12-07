@@ -9,5 +9,7 @@ namespace CarShowroom.Client.Services.Interfaces
     public interface IAuthenticationService
     {
         Task<RegistrationResponseDTO> RegisterUser(UserForRegistrationDTO userForRegistration);
+        Task<AuthResponseDTO> Login(UserForAuthenticationDTO userForAuthentication);
+        Task Logout();
     }
 }

@@ -53,12 +53,14 @@ namespace CarShowroom.WebAPI
             services.AddDbContext<CarShowroomDbContext>(options => 
                                                     options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
 
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CarShowroomDbContext>();
             var jwtSettings = Configuration.GetSection("JWTSettings");
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            })
+                .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -72,7 +74,6 @@ namespace CarShowroom.WebAPI
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["securityKey"]))
                 };
             });
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CarShowroomDbContext>();
 
             services.AddAutoMapper(typeof(ClientProfile), typeof(CarProfile), typeof(EmployeeProfile),
                 typeof(PartProfile), typeof(OrderProfile));

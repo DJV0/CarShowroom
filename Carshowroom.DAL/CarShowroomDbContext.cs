@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using CarShowroom.DAL.Configuration;
 
 namespace Carshowroom.DAL
 {
@@ -22,6 +23,8 @@ namespace Carshowroom.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
             modelBuilder.Entity<Client>().HasKey(client => client.Id);
             modelBuilder.Entity<Client>().Property(client => client.Name).HasMaxLength(30);

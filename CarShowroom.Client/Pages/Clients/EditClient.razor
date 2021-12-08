@@ -4,6 +4,8 @@
 @inject IClientService ClientService
 @inject ICarService CarService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 @if (client == null)
 {
@@ -77,7 +79,7 @@ else
     void RemoveClientCar(int id)
     {
         var car = client.Cars.FirstOrDefault(c => c.Id == id);
-        if(car != null) client.Cars.Remove(car);
+        if (car != null) client.Cars.Remove(car);
     }
 
     void AddNewClientCar()

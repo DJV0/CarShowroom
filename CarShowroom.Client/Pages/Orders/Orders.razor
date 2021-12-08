@@ -3,6 +3,8 @@
 @using CarShowroom.Client.DTOs
 @inject IOrderService OrderService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin,Manager")]
 
 @if (orders == null)
 {

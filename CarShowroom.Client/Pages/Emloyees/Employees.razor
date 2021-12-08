@@ -3,8 +3,10 @@
 @using CarShowroom.Client.Services.Interfaces
 @inject IEmployeeService EmployeeService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles ="Admin,Manager")]
 
-@if(employees == null)
+@if (employees == null)
 {
     <span><em>Loading...</em></span>
 }
@@ -26,7 +28,8 @@ else
                 <tr>
                     <td>
                         <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/employee/{employee.Id}"))">
-                        @employee.Name @employee.LastName</button> 
+                            @employee.Name @employee.LastName
+                        </button>
                     </td>
                     <td>@employee.Phone</td>
                     <td>@employee.Position</td>

@@ -6,6 +6,8 @@
 @inject IEmployeeService EmployeeService
 @inject IPartService PartService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin,Manager")]
 
 @if (order == null)
 {
@@ -28,7 +30,7 @@ else
         </div>
         <div class="form-group">
             <label for="cars" class="form-label">Car</label>
-            <input class="form-control" list="carList" id="cars" value="@order.Car.Make @order.Car.Model @order.Car.Year" 
+            <input class="form-control" list="carList" id="cars" value="@order.Car.Make @order.Car.Model @order.Car.Year"
                    @onchange="@((args)=> AddCar(args.Value.ToString()))" placeholder="Type to search...">
             <datalist id="carList">
                 @foreach (var car in cars)

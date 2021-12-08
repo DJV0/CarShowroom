@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace CarShowroom.Client.Services
             if (!authResult.IsSuccessStatusCode)
                 return result;
             await _localStorage.SetItemAsync("authToken", result.Token);
-            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(userForAuthentication.Email);
+            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Token);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
             return new AuthResponseDTO { IsAuthSuccessful = true };
         }
@@ -62,6 +63,12 @@ namespace CarShowroom.Client.Services
             await _localStorage.RemoveItemAsync("authToken");
             ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
             _client.DefaultRequestHeaders.Authorization = null;
+        }
+
+        public async Task<IEnumerable<string>> GetRoles()
+        {
+            var roles = await _client.GetFromJsonAsync<IEnumerable<string>>("account/getroles");
+            return roles;
         }
     }
 }

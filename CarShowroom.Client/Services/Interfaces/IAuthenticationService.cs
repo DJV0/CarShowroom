@@ -11,5 +11,6 @@ namespace CarShowroom.Client.Services.Interfaces
         Task<RegistrationResponseDTO> RegisterUser(UserForRegistrationDTO userForRegistration);
         Task<AuthResponseDTO> Login(UserForAuthenticationDTO userForAuthentication);
         Task Logout();
+        Task<IEnumerable<string>> GetRoles();
     }
 }

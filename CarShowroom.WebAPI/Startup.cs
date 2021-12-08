@@ -53,7 +53,11 @@ namespace CarShowroom.WebAPI
             services.AddDbContext<CarShowroomDbContext>(options => 
                                                     options.UseSqlServer(Configuration["ConnectionStrings:CarShowroomdb"]));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CarShowroomDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+                {
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<CarShowroomDbContext>();
             var jwtSettings = Configuration.GetSection("JWTSettings");
             services.AddAuthentication(opt =>
             {

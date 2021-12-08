@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarShowroom.WebAPI.Controllers
 {
     [ApiController]
     [Produces("application/json")]
     [Route("api/[controller]")]
+    [Authorize]
     public class ClientController : ControllerBase
     {
         private readonly IClientService _clientService;

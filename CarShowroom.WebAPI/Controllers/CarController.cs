@@ -17,6 +17,7 @@ namespace CarShowroom.WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;

@@ -1,4 +1,5 @@
 ﻿using CarShowroom.WebAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,6 @@ namespace CarShowroom.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Produces("application/json")]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -41,6 +41,7 @@ namespace CarShowroom.WebAPI.Controllers
         }
 
         [HttpPost("Registration")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDTO userForRegistration)
         {
             if (userForRegistration == null || !ModelState.IsValid)

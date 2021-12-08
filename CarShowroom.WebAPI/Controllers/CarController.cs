@@ -16,7 +16,6 @@ namespace CarShowroom.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     [Produces("application/json")]
     public class CarController : ControllerBase
     {

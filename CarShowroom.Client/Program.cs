@@ -1,7 +1,9 @@
+using CarShowroom.Client.Infrastructure;
 using CarShowroom.Client.Infrastructure.HttpClients;
 using CarShowroom.Client.Infrastructure.HttpClients.Interfaces;
 using CarShowroom.Client.Services;
 using CarShowroom.Client.Services.Interfaces;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 
 namespace CarShowroom.Client
 {
@@ -21,23 +24,25 @@ namespace CarShowroom.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddHttpClient<ICarClient, CarClient>(client => 
-                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
-            builder.Services.AddHttpClient<IClientClient, ClientClient>(client =>
-                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
-            builder.Services.AddHttpClient<IPartClient, PartClient>(client =>
-                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
-            builder.Services.AddHttpClient<IOrderClient, OrderClient>(client =>
-                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
-            builder.Services.AddHttpClient<IEmployeeClient, EmployeeClient>(client =>
-                                                            client.BaseAddress = new Uri("https://localhost:44362/api/"));
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44362/api/") });
+
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+            builder.Services.AddScoped<ICarClient, CarClient>();
+            builder.Services.AddScoped<IClientClient, ClientClient>();
+            builder.Services.AddScoped<IPartClient, PartClient>();
+            builder.Services.AddScoped<IOrderClient, OrderClient>();
+            builder.Services.AddScoped<IEmployeeClient, EmployeeClient>();
 
             builder.Services.AddScoped<ICarService, CarService>();
             builder.Services.AddScoped<IClientService, ClientService>();
             builder.Services.AddScoped<IPartService, PartService>();
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+
 
             await builder.Build().RunAsync();
         }

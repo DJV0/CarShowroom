@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using CarShowroom.DAL.Configuration;
 
 namespace Carshowroom.DAL
 {
-    public class CarShowroomDbContext : DbContext
+    public class CarShowroomDbContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -19,6 +22,10 @@ namespace Carshowroom.DAL
         public CarShowroomDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
             modelBuilder.Entity<Client>().HasKey(client => client.Id);
             modelBuilder.Entity<Client>().Property(client => client.Name).HasMaxLength(30);
             modelBuilder.Entity<Client>().Property(client => client.Name).IsRequired();
@@ -147,7 +154,6 @@ namespace Carshowroom.DAL
                 new OrderPart { OrderId = 2, PartId = 2 }
                 );
 
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

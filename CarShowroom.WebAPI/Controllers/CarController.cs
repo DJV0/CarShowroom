@@ -2,6 +2,8 @@
 using CarShowroom.BLL.Interfaces;
 using CarShowroom.Models.Entities;
 using CarShowroom.WebAPI.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +17,7 @@ namespace CarShowroom.WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;

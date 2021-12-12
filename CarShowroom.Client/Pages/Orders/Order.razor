@@ -3,6 +3,8 @@
 @using CarShowroom.Client.DTOs
 @inject IOrderService OrderService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin,Manager")]
 
 @if (order == null)
 {
@@ -12,6 +14,8 @@ else
 {
     <h3>Order</h3>
     <dl>
+        <dt>Id</dt>
+        <dd>@order.Id</dd>
         <dt>Start</dt>
         <dd>@order.BeginningOfWork.ToString("dd/MM/yyyy")</dd>
         <dt>End</dt>

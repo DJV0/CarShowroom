@@ -3,15 +3,22 @@
 @using CarShowroom.Client.Services.Interfaces
 @inject IEmployeeService EmployeeService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin,Manager")]
 
-@if(employees == null)
+<h3>Employees</h3>
+@if (employees == null)
 {
     <span><em>Loading...</em></span>
 }
 else
 {
-    <h3>Employees</h3>
-    <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createemployee"))">Create employee</button>
+    <div>
+        <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createemployee"))">Create employee</button>
+    </div>
+    <div>
+        <input @oninput="@((args)=>filter=args.Value.ToString().ToLower())" placeholder="Search..." />
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -21,12 +28,13 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var employee in employees)
+            @foreach (var employee in filteredEmployees)
             {
                 <tr>
                     <td>
                         <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/employee/{employee.Id}"))">
-                        @employee.Name @employee.LastName</button> 
+                            @employee.Name @employee.LastName
+                        </button>
                     </td>
                     <td>@employee.Phone</td>
                     <td>@employee.Position</td>
@@ -39,6 +47,9 @@ else
 
 @code {
     IEnumerable<EmployeeDTO> employees;
+    string filter = String.Empty;
+    public IEnumerable<EmployeeDTO> filteredEmployees => employees
+                                    .Where(e => e.Name.ToLower().Contains(filter) || e.LastName.ToLower().Contains(filter));
 
     protected override async Task OnInitializedAsync()
     {

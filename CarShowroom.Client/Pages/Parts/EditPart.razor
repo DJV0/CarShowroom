@@ -3,8 +3,10 @@
 @using CarShowroom.Client.Services.Interfaces
 @inject IPartService PartService
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin,Manager")]
 
-@if(part == null)
+@if (part == null)
 {
     <span><em>Loading...</em></span>
 }
@@ -40,7 +42,7 @@ else
 
     async Task HandleValidSubmit()
     {
-        var result = await PartService.UpdatePart(Id,part);
+        var result = await PartService.UpdatePart(Id, part);
         if (result) NavigationManager.NavigateTo($"/part/{Id}");
     }
 }

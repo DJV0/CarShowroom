@@ -6,26 +6,33 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Admin,Manager")]
 
+<h3>Orders</h3>
 @if (orders == null)
 {
     <span><em>Loading...</em></span>
 }
 else
 {
-    <h3>Orders</h3>
-    <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createorder"))">Create order</button>
+    <div>
+        <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createorder"))">Create order</button>
+    </div>
+    <div>
+        <input @oninput="@((args)=>filter=args.Value.ToString().ToLower())" placeholder="Search..." />
+    </div>
     <table class="table table-hover">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Car</th>
                 <th>Start</th>
                 <th>End</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var order in orders)
+            @foreach (var order in filteredOrders)
             {
                 <tr @onclick="@(()=>NavigationManager.NavigateTo($"/order/{order.Id}"))">
+                    <td>@order.Id</td>
                     <td>
                         <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/car/{order.CarId}"))">
                             @order.Car.Make @order.Car.Model @order.Car.Year
@@ -42,6 +49,8 @@ else
 
 @code {
     IEnumerable<OrderDTO> orders;
+    string filter = String.Empty;
+    public IEnumerable<OrderDTO> filteredOrders => orders.Where(o => o.Id.ToString().ToLower().Contains(filter));
 
     protected override async Task OnInitializedAsync()
     {

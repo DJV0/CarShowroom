@@ -8,13 +8,19 @@
 
 <h3>Cars</h3>
 
-@if (!cars.Any())
+@if (cars == null)
 {
     <span><em>Loading...</em></span>
 }
 else
 {
-    <button class="btn btn-light" @onclick="@CreateCar">Create car</button>
+
+    <div class="col">
+        <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createcar"))">Create car</button>
+    </div>
+    <div>
+        <input @oninput="@((args)=>filter=args.Value.ToString().ToLower())" placeholder="Search..."/>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -25,11 +31,11 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var car in cars)
+            @foreach (var car in filteredCars)
             {
                 <tr>
                     <td>
-                        <button class="btn btn-link" @onclick="@(()=>ShowCar(car.Id))">
+                        <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/car/{car.Id}"))">
                             @car.Make @car.Model
                         </button>
                     </td>
@@ -45,20 +51,13 @@ else
 
 
 @code {
-    private IEnumerable<CarDTO> cars = new List<CarDTO>();
+    IEnumerable<CarDTO> cars;
+    string filter = String.Empty;
+    public IEnumerable<CarDTO> filteredCars => cars
+                                                .Where(car => $"{car.Make} {car.Model} {car.Year}".ToLower().Contains(filter));
 
     protected override async Task OnInitializedAsync()
     {
         cars = await CarService.GetCars();
-    }
-
-    void ShowCar(int id)
-    {
-        NavigationManager.NavigateTo($"/car/{id}");
-    }
-
-    void CreateCar()
-    {
-        NavigationManager.NavigateTo("/createcar");
     }
 }

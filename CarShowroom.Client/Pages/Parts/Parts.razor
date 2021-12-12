@@ -13,7 +13,12 @@
 }
 else
 {
-    <button class="btn btn-light" @onclick="@CreatePart">Create part</button>
+    <div>
+        <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createpart"))">Create part</button>
+    </div>
+    <div>
+        <input @oninput="@((args)=>filter=args.Value.ToString().ToLower())" placeholder="Search..." />
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -22,10 +27,14 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var part in parts)
+            @foreach (var part in filteredParts)
             {
                 <tr>
-                    <td><button class="btn btn-link" @onclick="@(()=>ShowPart(part.Id))">@part.Name</button></td>
+                    <td>
+                        <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/part/{part.Id}"))">
+                            @part.Name
+                        </button>
+                    </td>
                     <td>@part.SerialNumber</td>
                 </tr>
             }
@@ -37,19 +46,12 @@ else
 
 @code {
     IEnumerable<PartDTO> parts;
+    string filter = String.Empty;
+    public IEnumerable<PartDTO> filteredParts => parts
+                                .Where(p => p.Name.ToLower().Contains(filter) || p.SerialNumber.ToLower().Contains(filter));
 
     protected override async Task OnInitializedAsync()
     {
         parts = await PartService.GetParts();
-    }
-
-    void CreatePart()
-    {
-        NavigationManager.NavigateTo("/createpart");
-    }
-
-    void ShowPart(int id)
-    {
-        NavigationManager.NavigateTo($"/part/{id}");
     }
 }

@@ -7,13 +7,18 @@
 @attribute [Authorize]
 
 <h3>Clients</h3>
-@if (!clients.Any())
+@if (clients == null)
 {
     <span><em>Loading...</em></span>
 }
 else
 {
-    <button class="btn btn-light" @onclick="@CreateClient">Create client</button>
+    <div>
+        <button class="btn btn-light" @onclick="@(()=>NavigationManager.NavigateTo("/createclient"))">Create client</button>
+    </div>
+    <div>
+        <input @oninput="@((args)=>filter=args.Value.ToString().ToLower())" placeholder="Search..." />
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -22,10 +27,14 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var client in clients)
+            @foreach (var client in filteredClients)
             {
                 <tr>
-                    <td><button class="btn btn-link" @onclick="@(()=>ShowClient(client.Id))">@client.Name @client.LastName</button></td>
+                    <td>
+                        <button class="btn btn-link" @onclick="@(()=>NavigationManager.NavigateTo($"/client/{client.Id}"))">
+                            @client.Name @client.LastName
+                        </button>
+                    </td>
                     <td>@client.Phone</td>
                 </tr>
             }
@@ -33,20 +42,13 @@ else
     </table>
 }
 @code {
-    IEnumerable<ClientDTO> clients = new List<ClientDTO>();
+    IEnumerable<ClientDTO> clients;
+    string filter = String.Empty;
+    public IEnumerable<ClientDTO> filteredClients => clients
+                        .Where(client => client.Name.ToLower().Contains(filter) || client.LastName.ToLower().Contains(filter));
 
     protected override async Task OnInitializedAsync()
     {
         clients = await ClientService.GetClients();
-    }
-
-    void ShowClient(int id)
-    {
-        NavigationManager.NavigateTo($"/client/{id}");
-    }
-
-    void CreateClient()
-    {
-        NavigationManager.NavigateTo("/createclient");
     }
 }

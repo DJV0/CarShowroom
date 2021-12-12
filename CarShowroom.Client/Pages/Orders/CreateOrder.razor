@@ -10,6 +10,12 @@
 @attribute [Authorize(Roles = "Admin,Manager")]
 
 <h3>Create new order</h3>
+@if (employees == null || parts == null || cars == null)
+{
+    <span><em>Loading...</em></span>
+}
+else
+{
 <EditForm Model="@order" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <div class="form-group">
@@ -24,14 +30,14 @@
     </div>
     <div class="form-group">
         <label for="cars" class="form-label">Car</label>
-        <input class="form-control" list="carList" id="cars" @onchange="@((args)=> AddCar(args.Value.ToString()))" placeholder="Type to search...">
+        <input class="form-control" list="carList" id="cars" @onchange="@((args) => AddCar(args.Value.ToString()))" placeholder="Type to search...">
         <datalist id="carList">
             @foreach (var car in cars)
             {
                 <option value="@car.Make @car.Model @car.Year"></option>
             }
         </datalist>
-        <ValidationMessage For="@(()=>order.CarId)"></ValidationMessage>
+        <ValidationMessage For="@(() => order.CarId)"></ValidationMessage>
     </div>
     <div class="form-group">
         <h4>Employees</h4>
@@ -49,7 +55,7 @@
         </div>
         <div class="input-group mb-3">
             <input id="employeeInput" class="form-control" type="text" list="Employees"
-                   @oninput="@((args) => inputEmployee = args.Value.ToString())" placeholder="Type to search..." aria-describedby="button-add" />
+                   @oninput="@((args) => inputEmployee = args.Value.ToString().ToLower())" placeholder="Type to search..." aria-describedby="button-add" />
             <a class="btn btn-outline-primary" id="button-add" @onclick="@(() => AddEmployee())">Add</a>
             <datalist class="col-4" id="Employees">
                 @foreach (var employee in filteredEmployees)
@@ -76,12 +82,12 @@
         </div>
         <div class="input-group mb-3">
             <input id="partInput" class="form-control" type="text" list="Parts"
-                   @oninput="@((args) => inputPart = args.Value.ToString())" placeholder="Type to search..." aria-describedby="button-add" />
+                   @oninput="@((args) => inputPart = args.Value.ToString().ToLower())" placeholder="Type to search..." aria-describedby="button-add" />
             <a class="btn btn-outline-primary" id="button-add" @onclick="@(() => AddPart())">Add</a>
             <datalist class="col-4" id="Parts">
                 @foreach (var part in filteredParts)
                 {
-                    <option value="@part.Name"></option>
+                    <option value="@part.Name">@part.SerialNumber</option>
 
                 }
             </datalist>
@@ -89,22 +95,20 @@
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </EditForm>
+}
 
 @code {
     OrderDTO order = new OrderDTO();
-    IEnumerable<EmployeeDTO> employees = new List<EmployeeDTO>();
-    IEnumerable<PartDTO> parts = new List<PartDTO>();
-    IEnumerable<CarDTO> cars = new List<CarDTO>();
+    IEnumerable<EmployeeDTO> employees;
+    IEnumerable<PartDTO> parts;
+    IEnumerable<CarDTO> cars;
     string inputCar = String.Empty;
     string inputEmployee = String.Empty;
     string inputPart = String.Empty;
-    List<EmployeeDTO> filteredEmployees => employees
-        .Where(e => e.Name.ToLower().Contains(inputEmployee.ToLower()) ||
-                    e.LastName.ToLower().Contains(inputEmployee.ToLower()))
-        .ToList();
-    List<PartDTO> filteredParts => parts
-        .Where(p => p.Name.ToLower().Contains(inputPart.ToLower()) || p.SerialNumber.ToLower().Contains(inputPart.ToLower()))
-        .ToList();
+    public IEnumerable<EmployeeDTO> filteredEmployees => employees
+        .Where(e => e.Name.ToLower().Contains(inputEmployee) || e.LastName.ToLower().Contains(inputEmployee));
+    public IEnumerable<PartDTO> filteredParts => parts
+        .Where(p => p.Name.ToLower().Contains(inputPart) || p.SerialNumber.ToLower().Contains(inputPart));
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,21 +131,20 @@
     void AddCar(string input)
     {
         var selectedCar = cars.FirstOrDefault(c => $"{c.Make} {c.Model} {c.Year}" == input);
-        if (selectedCar == null) return;
-        order.CarId = selectedCar.Id;
+        if (selectedCar != null) order.CarId = selectedCar.Id;
     }
 
     void AddEmployee()
     {
-        var selectedEmployee = employees.FirstOrDefault(e => $"{e.Name} {e.LastName}" == inputEmployee);
-        if (selectedEmployee == null || order.Employees.Contains(selectedEmployee)) return;
-        order.Employees.Add(selectedEmployee);
+        var selectedEmployee = employees.FirstOrDefault(e => $"{e.Name} {e.LastName}".ToLower() == inputEmployee);
+        if (selectedEmployee != null && order.Employees.FirstOrDefault(e => e.Id == selectedEmployee.Id) == null)
+            order.Employees.Add(selectedEmployee);
     }
 
     void AddPart()
     {
-        var selectedPart = parts.FirstOrDefault(p => p.Name == inputPart);
-        if (selectedPart == null || order.Parts.Contains(selectedPart)) return;
-        order.Parts.Add(selectedPart);
+        var selectedPart = parts.FirstOrDefault(p => p.Name.ToLower() == inputPart);
+        if (selectedPart != null && order.Parts.FirstOrDefault(p => p.Id == selectedPart.Id) == null)
+            order.Parts.Add(selectedPart);
     }
 }

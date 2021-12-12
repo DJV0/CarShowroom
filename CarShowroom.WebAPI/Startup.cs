@@ -125,7 +125,7 @@ namespace CarShowroom.WebAPI
                 });
             });
             app.UseCors(builder => builder
-                .AllowAnyOrigin()
+                .WithOrigins("https://localhost:44323")
                 .AllowAnyMethod()
                 .AllowAnyHeader());
             app.UseHttpsRedirection();
